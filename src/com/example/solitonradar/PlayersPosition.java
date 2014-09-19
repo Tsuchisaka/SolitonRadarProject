@@ -28,6 +28,7 @@ public class PlayersPosition {
 	
 	public void setMyPosition(final int angle, final double X, final double Y){
 		//PlayerPositionクラスのMacAddressフィールドから自分のMacAddressを探す
+		//クエリ獲得でAPIリクエスト消費
 		NCMBQuery<NCMBObject> query = NCMBQuery.getQuery("PlayerPosition");
 		query.whereEqualTo("MacAddress", mac);
 		query.findInBackground(new FindCallback<NCMBObject>() {
@@ -38,16 +39,21 @@ public class PlayersPosition {
                     //MacAddressが見つかった	
                 	NCMBObject obj = result.get(0);
                 	obj.put("Data", data);
+                	//データ書き込みでAPIリクエスト消費
                 	obj.saveEventually();
                 } else {
                     //MacAddressが見つからなかった
                 	NCMBObject obj = new NCMBObject("PlayerPosition");
                 	obj.put("MacAddress", mac);
                     obj.put("Data", data);
+                    //データ書き込みでAPIリクエスト消費
                     obj.saveInBackground(); 
                 }
             }
         });
+		
+		//queryからゲームの情報（MacAddress:MASTER）と各プレイヤの情報を読み取る
+		
 	}
 	
 	
