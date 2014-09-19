@@ -26,14 +26,14 @@ public class PlayersPosition {
 	
 	public String getMacAddress(){return mac;}
 	
-	public void setMyPosition(final double X, final double Y){
+	public void setMyPosition(final int angle, final double X, final double Y){
 		//PlayerPositionクラスのMacAddressフィールドから自分のMacAddressを探す
 		NCMBQuery<NCMBObject> query = NCMBQuery.getQuery("PlayerPosition");
 		query.whereEqualTo("MacAddress", mac);
 		query.findInBackground(new FindCallback<NCMBObject>() {
             @Override
             public void done(List<NCMBObject> result, NCMBException e){
-            	String data = Double.toString(X) + "," + Double.toString(Y);
+            	String data = Integer.toString(angle) + "," + Double.toString(X) + "," + Double.toString(Y);
                 if (result.isEmpty() != true){
                     //MacAddressが見つかった	
                 	NCMBObject obj = result.get(0);
@@ -41,7 +41,7 @@ public class PlayersPosition {
                 	obj.saveEventually();
                 } else {
                     //MacAddressが見つからなかった
-                	NCMBObject obj = new NCMBObject("TestClass");
+                	NCMBObject obj = new NCMBObject("PlayerPosition");
                 	obj.put("MacAddress", mac);
                     obj.put("Data", data);
                     obj.saveInBackground(); 

@@ -19,16 +19,17 @@ public class MainActivity extends ActionBarActivity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //pp = new PlayersPosition();
-        //pp.setMyPosition(0.00, 0.00);
-        //setContentView(R.layout.activity_main);
+        NCMB.initialize(this, "480c1f99d7b45ae9459d50f303e95af736fe32392b914235b624c542d54ccf10", "29f491b4e283238a7ea6c18c1b369d9b39f8d507d7c3e30325fb48c4e14515e4");
         
+        pp = new PlayersPosition();
+        pp.setMyPosition(0, 0.01, 0.20);
+        setContentView(R.layout.activity_main);
+        /*
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.net);
         setContentView(imageView);
+        */
         /*
-        NCMB.initialize(this, "480c1f99d7b45ae9459d50f303e95af736fe32392b914235b624c542d54ccf10", "29f491b4e283238a7ea6c18c1b369d9b39f8d507d7c3e30325fb48c4e14515e4");
-        
         NCMBQuery<NCMBObject> query = NCMBQuery.getQuery("TestClass");
         query.whereEqualTo("message", "Hello, Tarou!");
         query.findInBackground(new FindCallback<NCMBObject>() {
