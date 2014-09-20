@@ -15,10 +15,10 @@ import android.app.AlertDialog;
 import android.util.Log;
 
 public class PlayersPosition {
-	private PlayerData mydata;
-	public ArrayList<PlayerData> allPlayersData = new ArrayList<PlayerData>();
+	private PlayerData mydata;//自分のマックアドレスと座標と向きと役割の情報を保持（詳細はPlayerData参照）
+	public ArrayList<PlayerData> allPlayersData = new ArrayList<PlayerData>();//全員のデーターを保存するためのリスト
 	
-	public PlayersPosition(){
+	public PlayersPosition(){//初期化したい内容を書き込む
 		mydata = new PlayerData();
 		mydata.setMacAddress(MacAddress.getMacAddressString());
 	}
