@@ -3,6 +3,7 @@ package com.example.solitonradar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
 import java.util.*;
 import android.view.MenuItem;
@@ -22,26 +23,24 @@ public class MainActivity extends ActionBarActivity {
         NCMB.initialize(this, "480c1f99d7b45ae9459d50f303e95af736fe32392b914235b624c542d54ccf10", "29f491b4e283238a7ea6c18c1b369d9b39f8d507d7c3e30325fb48c4e14515e4");
         
         pp = new PlayersPosition();
-        pp.setMyPosition(0, 0.01, 0.20);
+        pp.setMyPosition(0, 0.01, 0.30);
         setContentView(R.layout.activity_main);
         /*
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.net);
         setContentView(imageView);
         */
-        /*
-        NCMBQuery<NCMBObject> query = NCMBQuery.getQuery("TestClass");
-        query.whereEqualTo("message", "Hello, Tarou!");
-        query.findInBackground(new FindCallback<NCMBObject>() {
-            @Override
-            public void done(List<NCMBObject> result, NCMBException e){
-                if (result.isEmpty() != true){
-                    dispMessage(result.get(0));
-                } else {
-                    PostData();
-                }
-            }
-        });*/
+        
+        String line = "test" + pp.allPlayersData.size();
+        Log.i(this.getClass().getName(), "Reading allPlayersData...");
+        Log.i(this.getClass().getName(), "allPlayersData.size() == " + pp.allPlayersData.size());
+        for(int i=0; i<pp.allPlayersData.size(); i++){
+        	PlayerData pd = pp.allPlayersData.get(i);
+        	line += pd.getMacAddress() + "\n";
+        }
+        TextView _helloWorldWord = new TextView(this);
+        _helloWorldWord.setText(line); 
+        setContentView(_helloWorldWord);
         
     }
     
