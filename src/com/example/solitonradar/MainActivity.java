@@ -1,4 +1,4 @@
-package com.example.solitonradar;
+ï»¿package com.example.solitonradar;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -53,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
     private void dispMessage(NCMBObject message){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         
-        alertDialogBuilder.setTitle("ƒf[ƒ^æ“¾");
+        alertDialogBuilder.setTitle("ãƒ‡ãƒ¼ã‚¿å–å¾—");
         alertDialogBuilder.setMessage(pp.getMacAddress());
         alertDialogBuilder.show();
     }

@@ -1,4 +1,4 @@
-package com.example.solitonradar;
+ï»¿package com.example.solitonradar;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -26,8 +26,8 @@ public class PlayersPosition {
 	public String getMacAddress(){return mydata.getMacAddress();}
 	
 	public void setMyPosition(final int direction, final double longitude, final double latitude){
-		//PlayerPositionƒNƒ‰ƒX‚ÌMacAddressƒtƒB[ƒ‹ƒh‚©‚ç©•ª‚ÌMacAddress‚ğ’T‚·
-		//ƒNƒGƒŠŠl“¾‚ÅAPIƒŠƒNƒGƒXƒgÁ”ï
+		//PlayerPositionã‚¯ãƒ©ã‚¹ã®MacAddressãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‹ã‚‰è‡ªåˆ†ã®MacAddressã‚’æ¢ã™
+		//ã‚¯ã‚¨ãƒªç²å¾—ã§APIãƒªã‚¯ã‚¨ã‚¹ãƒˆæ¶ˆè²»
 		NCMBQuery<NCMBObject> query = NCMBQuery.getQuery("PlayerPosition");
 		query.whereEqualTo("MacAddress", mydata.getMacAddress());
 		query.findInBackground(new FindCallback<NCMBObject>() {
@@ -35,11 +35,11 @@ public class PlayersPosition {
             public void done(List<NCMBObject> result, NCMBException e){
             	NCMBObject obj;
                 if (result.isEmpty() != true){
-                    //MacAddress‚ªŒ©‚Â‚©‚Á‚½	
+                    //MacAddressãŒè¦‹ã¤ã‹ã£ãŸ	
                 	obj = result.get(0);
                 	Log.i(this.getClass().getName(), "MacAddress was found.");
                 } else {
-                    //MacAddress‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½
+                    //MacAddressãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸ
                 	obj = new NCMBObject("PlayerPosition");
                 	obj.put("MacAddress", mydata.getMacAddress());
                 	Log.i(this.getClass().getName(), "New MacAddress.");
@@ -49,12 +49,12 @@ public class PlayersPosition {
             	obj.put("latitude", latitude);
             	obj.put("direction", direction);
             	obj.put("SNAKE", mydata.getIsSnake());
-            	//ƒf[ƒ^‘‚«‚İ‚ÅAPIƒŠƒNƒGƒXƒgÁ”ï
+            	//ãƒ‡ãƒ¼ã‚¿æ›¸ãè¾¼ã¿ã§APIãƒªã‚¯ã‚¨ã‚¹ãƒˆæ¶ˆè²»
             	obj.saveEventually();
             }
         });
 		
-		//query‚©‚çƒQ[ƒ€‚Ìî•ñiMacAddress:MASTERj‚ÆŠeƒvƒŒƒCƒ„‚Ìî•ñ‚ğ“Ç‚İæ‚é
+		//queryã‹ã‚‰ã‚²ãƒ¼ãƒ ã®æƒ…å ±ï¼ˆMacAddress:MASTERï¼‰ã¨å„ãƒ—ãƒ¬ã‚¤ãƒ¤ã®æƒ…å ±ã‚’èª­ã¿å–ã‚‹
 		NCMBQuery<NCMBObject> query2 = NCMBQuery.getQuery("PlayerPosition");
 		query2.whereNotEqualTo("MacAdress", " ");
 		query2.findInBackground(new FindCallback<NCMBObject>() {
@@ -68,7 +68,7 @@ public class PlayersPosition {
                 	if(mydata.getIsSnake() == true && obj.getString("MacAddress") == "MASTER"){
                 		obj.put("direction", mydata.getTime());
                 		Log.i(this.getClass().getName(), "Rewrite MASTER Time.");
-                		//ƒf[ƒ^‘‚«‚İ‚ÅAPIƒŠƒNƒGƒXƒgÁ”ï
+                		//ãƒ‡ãƒ¼ã‚¿æ›¸ãè¾¼ã¿ã§APIãƒªã‚¯ã‚¨ã‚¹ãƒˆæ¶ˆè²»
                 		obj.saveEventually();
                 	}
                 	PlayerData pd = new PlayerData();
@@ -81,7 +81,7 @@ public class PlayersPosition {
                 	Log.i(this.getClass().getName(), "Got " + pd.getMacAddress());
                 }
                 
-                //c‚èŠÔ‚ÆƒQ[ƒ€‚Ìó‹µ‚ğ“¯Šú
+                //æ®‹ã‚Šæ™‚é–“ã¨ã‚²ãƒ¼ãƒ ã®çŠ¶æ³ã‚’åŒæœŸ
                 for(int i=0; i<allPlayersData.size(); i++){
                 	PlayerData pd = allPlayersData.get(i);
                 	if (pd.getMacAddress() == "MASTER"){

@@ -1,4 +1,4 @@
-package com.example.solitonradar;
+﻿package com.example.solitonradar;
 
 public class PlayerData {
 	private String mac = "";
