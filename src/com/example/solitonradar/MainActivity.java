@@ -11,6 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.nifty.cloud.mb.*;
 import android.app.AlertDialog;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import android.support.v4.app.FragmentActivity;
+import android.location.Location;
+import android.location.LocationManager;
+import android.view.View;
+import android.widget.Toast;
+import android.content.Context;
 
 
 public class MainActivity extends ActionBarActivity {
