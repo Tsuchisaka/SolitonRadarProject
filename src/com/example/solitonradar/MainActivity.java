@@ -36,7 +36,7 @@ public class MainActivity extends ActionBarActivity {
 		NCMB.initialize(this, "480c1f99d7b45ae9459d50f303e95af736fe32392b914235b624c542d54ccf10", "29f491b4e283238a7ea6c18c1b369d9b39f8d507d7c3e30325fb48c4e14515e4");
 
 		pp = new PlayersPosition();       
-  		pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
+  		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
 		setContentView(R.layout.activity_main);
 		setUpMapIfNeeded();//地図作成する
 		/*
