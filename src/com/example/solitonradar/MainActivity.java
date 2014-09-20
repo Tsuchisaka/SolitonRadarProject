@@ -55,19 +55,6 @@ public class MainActivity extends ActionBarActivity {
         
     }
     
-    private void PostData(){
-        NCMBObject TestClass = new NCMBObject("TestClass");
-        TestClass.put("message", "Hello, NCMB!");
-        TestClass.saveInBackground(); 
-    }
-    
-    private void dispMessage(NCMBObject message){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        
-        alertDialogBuilder.setTitle("データ取得");
-        alertDialogBuilder.setMessage(pp.getMacAddress());
-        alertDialogBuilder.show();
-    }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
