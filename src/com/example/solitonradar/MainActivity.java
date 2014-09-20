@@ -28,6 +28,9 @@ public class MainActivity extends ActionBarActivity {
 
 	PlayersPosition pp;
 	private GoogleMap mMap;
+	private static final int        LOCATION_TIME_OUT       = 10000; //10秒
+    private CustomLocationManager   mCustomLocationManager;
+    private Location                mCurrentLocation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +38,9 @@ public class MainActivity extends ActionBarActivity {
 		//サーバーに接続するための処理
 		NCMB.initialize(this, "480c1f99d7b45ae9459d50f303e95af736fe32392b914235b624c542d54ccf10", "29f491b4e283238a7ea6c18c1b369d9b39f8d507d7c3e30325fb48c4e14515e4");
 
-		pp = new PlayersPosition();       
-  		pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
+		pp = new PlayersPosition();
+		mCustomLocationManager = new CustomLocationManager(getApplicationContext());
+  		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
 		setContentView(R.layout.activity_main);
 		setUpMapIfNeeded();//地図作成する
 		/*
@@ -110,4 +114,40 @@ public class MainActivity extends ActionBarActivity {
 			Toast.makeText(this, "現在地を取得出来ませんでした。", Toast.LENGTH_SHORT).show();
 		}
 	}
+	
+	private void getCurrentLocation(){
+        mCustomLocationManager.getNowLocationData(LOCATION_TIME_OUT,
+                new CustomLocationManager.LocationCallback() {
+                 
+            // Timeoutすると実行
+            @Override
+            public void onTimeout() {
+                Toast.makeText(getApplicationContext(),
+                 "Time out", Toast.LENGTH_SHORT).show();
+            }
+ 
+            // 位置情報が得られると実行
+            @Override
+            public void onComplete(Location location) {
+                if(location != null){
+                    mCurrentLocation = location;
+                    Log.d("LoAR", "Current Lat, Long;"
+                        + mCurrentLocation.getLatitude()+","
+                        + mCurrentLocation.getLongitude());
+                }
+            }
+        });
+    }
+	
+	// 位置情報の取得を開始
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getCurrentLocation();
+    }
+ 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }
