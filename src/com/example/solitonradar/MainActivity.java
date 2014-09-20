@@ -101,10 +101,10 @@ public class MainActivity extends ActionBarActivity {
 		//初期位置の設定latLngが緯度経度，zoomで縮尺指定
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 		//ピンを建てる位置を指定LatLngでピンの位置，titleで表示する文字指定
-		mMap.addMarker(new MarkerOptions().position(latLng).title("(｀・ω・´)"));
+		//mMap.addMarker(new MarkerOptions().position(latLng).title("(｀・ω・´)"));
 		
 		//以下GPSで場所を取得したいけどどうなってるかわからん！
-		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		/*LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		Location lastLocate = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
 		if (lastLocate != null) {
@@ -112,7 +112,7 @@ public class MainActivity extends ActionBarActivity {
 			this.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, mMap.getCameraPosition().zoom));
 		} else {
 			Toast.makeText(this, "現在地を取得出来ませんでした。", Toast.LENGTH_SHORT).show();
-		}
+		}*/
 	}
 	
 	private void getCurrentLocation(){
@@ -131,6 +131,8 @@ public class MainActivity extends ActionBarActivity {
             public void onComplete(Location location) {
                 if(location != null){
                     mCurrentLocation = location;
+                    LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(LL).title("(｀・ω・´)"));
                     Log.d("LoAR", "Current Lat, Long;"
                         + mCurrentLocation.getLatitude()+","
                         + mCurrentLocation.getLongitude());
