@@ -43,7 +43,6 @@ public class MainActivity extends ActionBarActivity {
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.net);
         setContentView(imageView);
-<<<<<<< HEAD
 		 */
 
 		/*String line = "test" + pp.allPlayersData.size();
@@ -103,30 +102,6 @@ public class MainActivity extends ActionBarActivity {
 		//以下GPSで場所を取得したいけどどうなってるかわからん！
 		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		Location lastLocate = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-=======
-        */
-        
-        String line = "test" + pp.allPlayersData.size();
-        Log.i(this.getClass().getName(), "Reading allPlayersData...");
-        Log.i(this.getClass().getName(), "allPlayersData.size() == " + pp.allPlayersData.size());
-        for(int i=0; i<pp.allPlayersData.size(); i++){
-        	PlayerData pd = pp.allPlayersData.get(i);
-        	line += pd.getMacAddress() + "\n";
-        }
-        TextView _helloWorldWord = new TextView(this);
-        _helloWorldWord.setText(line); 
-        setContentView(_helloWorldWord);
-        
-    }
-    
-    
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
->>>>>>> origin/master
 
 		if (lastLocate != null) {
 			LatLng position = new LatLng(lastLocate.getLatitude(), lastLocate.getLongitude());
