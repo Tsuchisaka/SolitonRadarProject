@@ -46,3 +46,5 @@ bin/classes/com/example/solitonradar/MainActivity$1.class
 *.class
 *.class
 bin/classes/com/example/solitonradar/MainActivity$1.class
+bin/classes.dex
+bin/SolitonRadarProject.apk
