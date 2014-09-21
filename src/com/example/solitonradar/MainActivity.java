@@ -25,7 +25,6 @@ import android.content.Context;
 /*追加*/
 import com.google.android.gms.maps.model.PolygonOptions;
 import android.graphics.Color;
-
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -75,8 +74,6 @@ public class MainActivity extends ActionBarActivity {
 		_helloWorldWord.setText(line); 
 		setContentView(_helloWorldWord);
 		*/
-		
-
 	}
 
 	@Override
@@ -127,9 +124,10 @@ public class MainActivity extends ActionBarActivity {
 		options1.image(bitmap);
 		options1.anchor(0.5f,0.5f);
 		options1.position(new LatLng(35.049497, 135.780738), 600.0f, 600.0f);
+		*/
 		// マップに画像をオーバーレイ
-		GroundOverlay overlay = mMap.addGroundOverlay(options1);
-		overlay.setTransparency(0.3f);*/
+		//GroundOverlay overlay = mMap.addGroundOverlay(options1);
+		//overlay.setTransparency(0.3f);
 		
 		/*追加 ポリゴンの描写用*/
 		// 設定
@@ -163,7 +161,8 @@ public class MainActivity extends ActionBarActivity {
                 if(location != null){
                     mCurrentLocation = location;
                     LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(LL).title("(｀・ω・´)"));
+                    MakeIcon miMP = new MakeIcon();
+            		mMap.addMarker(miMP.CreateIcon(1,LL));
                     Log.d("LoAR", "Current Lat, Long;"
                         + mCurrentLocation.getLatitude()+","
                         + mCurrentLocation.getLongitude());

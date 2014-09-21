@@ -30,7 +30,7 @@
         android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAA42fjTw0CVO04siqGWaKaJTI07N4mE08" />
+            android:value="AIzaSyBqUBxuCnZNE9YkySNdyCpYb1Ht1oe2zgc" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -44,6 +44,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SubActivity"></activity>
     </application>
 
 </manifest>
