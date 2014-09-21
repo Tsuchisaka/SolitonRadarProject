@@ -22,6 +22,17 @@ import android.location.LocationManager;
 import android.view.View;
 import android.widget.Toast;
 import android.content.Context;
+/*追加*/
+import com.google.android.gms.maps.model.PolygonOptions;
+import android.graphics.Color;
+
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
+import android.location.Criteria;
+import android.location.LocationListener;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -32,6 +43,8 @@ public class MainActivity extends ActionBarActivity {
     private CustomLocationManager   mCustomLocationManager;
     private Location                mCurrentLocation;
 
+    
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,6 +73,7 @@ public class MainActivity extends ActionBarActivity {
 		_helloWorldWord.setText(line); 
 		setContentView(_helloWorldWord);
 		*/
+		
 
 	}
 
@@ -96,7 +110,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void setUpMap() {//地図を表示させる関数（中心位置や縮尺を選べる）
-		LatLng latLng = new LatLng(35.048641,135.780339);
+		LatLng latLng = new LatLng(35.049497, 135.780738);
 		float zoom = 17;
 		//初期位置の設定latLngが緯度経度，zoomで縮尺指定
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -113,7 +127,34 @@ public class MainActivity extends ActionBarActivity {
 		} else {
 			Toast.makeText(this, "現在地を取得出来ませんでした。", Toast.LENGTH_SHORT).show();
 		}*/
+		
+		MakeIcon mi = new MakeIcon();
+		mMap.addMarker(mi.CreateIcon(1,latLng));
+		
+		// 画像及び位置情報設定
+		GroundOverlayOptions options1 = new GroundOverlayOptions();
+		BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.radar);
+		options1.image(bitmap);
+		options1.anchor(0.5f,0.5f);
+		options1.position(new LatLng(35.049497, 135.780738), 600.0f, 600.0f);
+		// マップに画像をオーバーレイ
+		GroundOverlay overlay = mMap.addGroundOverlay(options1);
+		overlay.setTransparency(0.3f);
+		
+		/*追加 ポリゴンの描写用*/
+		// 設定
+		PolygonOptions options2 = new PolygonOptions();
+		// 描画する座標を設定
+		options2.addAll(createRectangle(new LatLng(35.049497, 135.780738), 0.0015, 0.0012));
+		// 抜き
+		//options.addHole(createRectangle(new LatLng(-22, 128), 1, 1));		
+		//options2.fillColor(0x110000FF);// 塗り		
+		options2.strokeColor(0xFF0000FF);// 線
+		options2.strokeWidth(5); // 線幅
+		mMap.addPolygon(options2); // 描画
+		
 	}
+
 	
 	private void getCurrentLocation(){
         mCustomLocationManager.getNowLocationData(LOCATION_TIME_OUT,
@@ -152,4 +193,17 @@ public class MainActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
     }
+    
+	/*追加 ポリゴンの描写*/
+	private List<LatLng> createRectangle(LatLng center, double halfWidth, double halfHeight) {
+		return Arrays.asList(new LatLng(center.latitude - halfHeight, center.longitude - halfWidth),
+				new LatLng(center.latitude - halfHeight, center.longitude + halfWidth),
+				new LatLng(center.latitude + halfHeight, center.longitude + halfWidth),
+				new LatLng(center.latitude + halfHeight, center.longitude - halfWidth),
+				new LatLng(center.latitude - halfHeight, center.longitude - halfWidth));
+	}
 }
+
+
+
+
