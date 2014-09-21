@@ -14,8 +14,15 @@ import android.app.AlertDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.maps.model.TileProvider;
+
 import android.support.v4.app.FragmentActivity;
 import android.location.Location;
 import android.location.LocationManager;
@@ -29,8 +36,8 @@ public class MainActivity extends ActionBarActivity {
 	PlayersPosition pp;
 	private GoogleMap mMap;
 	private static final int        LOCATION_TIME_OUT       = 10000; //10秒
-    private CustomLocationManager   mCustomLocationManager;
-    private Location                mCurrentLocation;
+	private CustomLocationManager   mCustomLocationManager;
+	private Location                mCurrentLocation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
 
 		pp = new PlayersPosition();
 		mCustomLocationManager = new CustomLocationManager(getApplicationContext());
-  		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
+		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
 		setContentView(R.layout.activity_main);
 		setUpMapIfNeeded();//地図作成する
 		/*
@@ -59,7 +66,7 @@ public class MainActivity extends ActionBarActivity {
 		TextView _helloWorldWord = new TextView(this);
 		_helloWorldWord.setText(line); 
 		setContentView(_helloWorldWord);
-		*/
+		 */
 
 	}
 
@@ -81,7 +88,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	private void setUpMapIfNeeded() {//XMｌにmapを表示させるための初期動作するための関数（ちょっとはっきり分かってない）
 		// Do a null check to confirm that we have not already instantiated the map.
 		if (mMap == null) {
@@ -100,56 +107,49 @@ public class MainActivity extends ActionBarActivity {
 		float zoom = 17;
 		//初期位置の設定latLngが緯度経度，zoomで縮尺指定
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-		//ピンを建てる位置を指定LatLngでピンの位置，titleで表示する文字指定
-		//mMap.addMarker(new MarkerOptions().position(latLng).title("(｀・ω・´)"));
 		
-		//以下GPSで場所を取得したいけどどうなってるかわからん！
-		/*LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		Location lastLocate = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-		if (lastLocate != null) {
-			LatLng position = new LatLng(lastLocate.getLatitude(), lastLocate.getLongitude());
-			this.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, mMap.getCameraPosition().zoom));
-		} else {
-			Toast.makeText(this, "現在地を取得出来ませんでした。", Toast.LENGTH_SHORT).show();
-		}*/
+		MakeIcon mi = new MakeIcon();
+		mMap.addMarker(mi.CreateIcon(1,latLng));
 	}
-	
+
 	private void getCurrentLocation(){
-        mCustomLocationManager.getNowLocationData(LOCATION_TIME_OUT,
-                new CustomLocationManager.LocationCallback() {
-                 
-            // Timeoutすると実行
-            @Override
-            public void onTimeout() {
-                Toast.makeText(getApplicationContext(),
-                 "Time out", Toast.LENGTH_SHORT).show();
-            }
- 
-            // 位置情報が得られると実行
-            @Override
-            public void onComplete(Location location) {
-                if(location != null){
-                    mCurrentLocation = location;
-                    LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(LL).title("(｀・ω・´)"));
-                    Log.d("LoAR", "Current Lat, Long;"
-                        + mCurrentLocation.getLatitude()+","
-                        + mCurrentLocation.getLongitude());
-                }
-            }
-        });
-    }
-	
+		mCustomLocationManager.getNowLocationData(LOCATION_TIME_OUT,
+				new CustomLocationManager.LocationCallback() {
+
+			// Timeoutすると実行
+			@Override
+			public void onTimeout() {
+				Toast.makeText(getApplicationContext(),
+						"Time out", Toast.LENGTH_SHORT).show();
+			}
+
+			// 位置情報が得られると実行
+			@Override
+			public void onComplete(Location location) {
+				if(location != null){
+					mCurrentLocation = location;
+					MakeIcon mi = new MakeIcon();
+					LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+					mMap.addMarker(mi.CreateIcon(2,LL));
+					Log.d("LoAR", "Current Lat, Long;"
+							+ mCurrentLocation.getLatitude()+","
+							+ mCurrentLocation.getLongitude());
+				}
+			}
+
+		});
+	}
+
 	// 位置情報の取得を開始
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getCurrentLocation();
-    }
- 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getCurrentLocation();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
 }
+
