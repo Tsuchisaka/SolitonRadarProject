@@ -42,7 +42,7 @@ public class MainActivity extends ActionBarActivity {
 	private static final int        LOCATION_TIME_OUT       = 10000; //10秒
     private CustomLocationManager   mCustomLocationManager;
     private Location                mCurrentLocation;
-
+    private OrientationListener mOrientationListener;
     
     
 	@Override
@@ -53,6 +53,8 @@ public class MainActivity extends ActionBarActivity {
 
 		pp = new PlayersPosition();
 		mCustomLocationManager = new CustomLocationManager(getApplicationContext());
+		mOrientationListener = new OrientationListener();
+		mOrientationListener.resume(getApplicationContext());
   		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
 		setContentView(R.layout.activity_main);
 		setUpMapIfNeeded();//地図作成する
@@ -179,6 +181,7 @@ public class MainActivity extends ActionBarActivity {
  
     @Override
     protected void onPause() {
+    	mOrientationListener.pause();
         super.onPause();
     }
     
