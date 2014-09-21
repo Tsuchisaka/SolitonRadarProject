@@ -114,44 +114,32 @@ public class MainActivity extends ActionBarActivity {
 		float zoom = 17;
 		//初期位置の設定latLngが緯度経度，zoomで縮尺指定
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-		//ピンを建てる位置を指定LatLngでピンの位置，titleで表示する文字指定
-		//mMap.addMarker(new MarkerOptions().position(latLng).title("(｀・ω・´)"));
 		
-		//以下GPSで場所を取得したいけどどうなってるかわからん！
-		/*LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		Location lastLocate = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-		if (lastLocate != null) {
-			LatLng position = new LatLng(lastLocate.getLatitude(), lastLocate.getLongitude());
-			this.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, mMap.getCameraPosition().zoom));
-		} else {
-			Toast.makeText(this, "現在地を取得出来ませんでした。", Toast.LENGTH_SHORT).show();
-		}*/
-		
+		//試しにアイコン設置
 		MakeIcon mi = new MakeIcon();
 		mMap.addMarker(mi.CreateIcon(1,latLng));
 		
 		// 画像及び位置情報設定
-		GroundOverlayOptions options1 = new GroundOverlayOptions();
-		BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.radar);
+		/*GroundOverlayOptions options1 = new GroundOverlayOptions();
+		BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.net);
 		options1.image(bitmap);
 		options1.anchor(0.5f,0.5f);
 		options1.position(new LatLng(35.049497, 135.780738), 600.0f, 600.0f);
 		// マップに画像をオーバーレイ
 		GroundOverlay overlay = mMap.addGroundOverlay(options1);
-		overlay.setTransparency(0.3f);
+		overlay.setTransparency(0.3f);*/
 		
 		/*追加 ポリゴンの描写用*/
 		// 設定
-		PolygonOptions options2 = new PolygonOptions();
+		//PolygonOptions options2 = new PolygonOptions();
 		// 描画する座標を設定
-		options2.addAll(createRectangle(new LatLng(35.049497, 135.780738), 0.0015, 0.0012));
+		//options2.addAll(createRectangle(new LatLng(35.049497, 135.780738), 0.0015, 0.0012));
 		// 抜き
 		//options.addHole(createRectangle(new LatLng(-22, 128), 1, 1));		
 		//options2.fillColor(0x110000FF);// 塗り		
-		options2.strokeColor(0xFF0000FF);// 線
-		options2.strokeWidth(5); // 線幅
-		mMap.addPolygon(options2); // 描画
+		//options2.strokeColor(0xFF0000FF);// 線
+		//options2.strokeWidth(5); // 線幅
+		//mMap.addPolygon(options2); // 描画
 		
 	}
 
@@ -195,13 +183,13 @@ public class MainActivity extends ActionBarActivity {
     }
     
 	/*追加 ポリゴンの描写*/
-	private List<LatLng> createRectangle(LatLng center, double halfWidth, double halfHeight) {
+	/*private List<LatLng> createRectangle(LatLng center, double halfWidth, double halfHeight) {
 		return Arrays.asList(new LatLng(center.latitude - halfHeight, center.longitude - halfWidth),
 				new LatLng(center.latitude - halfHeight, center.longitude + halfWidth),
 				new LatLng(center.latitude + halfHeight, center.longitude + halfWidth),
 				new LatLng(center.latitude + halfHeight, center.longitude - halfWidth),
 				new LatLng(center.latitude - halfHeight, center.longitude - halfWidth));
-	}
+	}*/
 }
 
 
