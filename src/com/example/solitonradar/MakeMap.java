@@ -2,40 +2,22 @@ package com.example.solitonradar;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
-import java.util.*;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
-import com.nifty.cloud.mb.*;
-import android.app.AlertDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import android.support.v4.app.FragmentActivity;
 import android.location.Location;
-import android.location.LocationManager;
-import android.view.View;
 import android.widget.Toast;
-import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
-
-import com.google.android.gms.maps.model.PolygonOptions;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlay;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
-import android.location.Criteria;
-import android.location.LocationListener;
+
 
 public class MakeMap  extends FragmentActivity{
 	private PlayersPosition pp;
@@ -60,6 +42,11 @@ public class MakeMap  extends FragmentActivity{
 		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
 		setContentView(R.layout.map);
 		setUpMapIfNeeded();//地図作成する
+		
+		//役割取得・・・runawayはtrue，hunterはfalse
+		Intent intent = getIntent();
+		Boolean role = intent.getBooleanExtra("Role",false);
+
 		/*
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.net);
