@@ -48,3 +48,6 @@ bin/classes/com/example/solitonradar/MainActivity$1.class
 bin/classes/com/example/solitonradar/MainActivity$1.class
 bin/classes.dex
 bin/SolitonRadarProject.apk
+bin/jarlist.cache
+project.properties
+*.class
