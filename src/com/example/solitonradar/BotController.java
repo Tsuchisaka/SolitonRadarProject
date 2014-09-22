@@ -34,7 +34,7 @@ public class BotController {
 				int angle = (45 * i) % 360;
 				double longitude = baseLocation.longitude;
 				double latitude = baseLocation.latitude;
-				double range = 0.0000001;
+				double range = 0.0005;
 				if(i % 4 == 0){
 					longitude += range * i;  
 				}else if(i%4==1){
@@ -47,6 +47,7 @@ public class BotController {
 				pd.setCoordinate(angle, longitude, latitude);
 			}
 			pd.setTime(300);
+			allBotData.add(pd);
 		}
 	}
 
