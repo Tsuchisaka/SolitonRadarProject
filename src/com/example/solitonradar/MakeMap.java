@@ -38,23 +38,26 @@ import android.location.Criteria;
 import android.location.LocationListener;
 
 public class MakeMap  extends FragmentActivity{
-	PlayersPosition pp;
+	private PlayersPosition pp;
+	private BotController bc;
 	private GoogleMap mMap;
 	private static final int        LOCATION_TIME_OUT       = 10000; //10秒
-    private CustomLocationManager   mCustomLocationManager;
-    private Location                mCurrentLocation;
-    private OrientationListener mOrientationListener;
-    private Bitmap sightImage;
+	private CustomLocationManager   mCustomLocationManager;
+	private Location                mCurrentLocation;
+	private OrientationListener mOrientationListener;
+	private Bitmap sightImage;
 
-    protected void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		pp = new PlayersPosition();
+		LatLng latLng = new LatLng(35.049497, 135.780738);
+		bc = new BotController(5,latLng);
 		Resources resources = getResources();
 		mCustomLocationManager = new CustomLocationManager(getApplicationContext());
 		mOrientationListener = new OrientationListener();
 		mOrientationListener.resume(getApplicationContext());
 		sightImage = BitmapFactory.decodeResource(resources, R.drawable.radian0);
-  		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
+		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
 		setContentView(R.layout.map);
 		setUpMapIfNeeded();//地図作成する
 		/*
@@ -73,7 +76,7 @@ public class MakeMap  extends FragmentActivity{
 		TextView _helloWorldWord = new TextView(this);
 		_helloWorldWord.setText(line); 
 		setContentView(_helloWorldWord);
-		*/
+		 */
 	}
 
 	@Override
@@ -94,7 +97,7 @@ public class MakeMap  extends FragmentActivity{
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	private void setUpMapIfNeeded() {//XMｌにmapを表示させるための初期動作するための関数（ちょっとはっきり分かってない）
 		// Do a null check to confirm that we have not already instantiated the map.
 		if (mMap == null) {
@@ -113,66 +116,78 @@ public class MakeMap  extends FragmentActivity{
 		//初期位置の設定latLngが緯度経度，zoomで縮尺指定
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
-		//ためし
-		MakeIcon miMP = new MakeIcon();
-		mMap.addMarker(miMP.CreateIcon(2,latLng));
-		
-		//視界範囲貼り付け
-		  OverlaySight ms = new OverlaySight();
-		  GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(4,latLng, sightImage)); 
-		  overlay.setTransparency(0.5f); 
-		  
-		  
-		  /*追加 ポリゴンの描写用*/
-		  PolygonFlash pf = new PolygonFlash();
-		  mMap.addPolygon(pf.Polygon(latLng)); // 描画
-		
+		if(bc.allBotData.size() == 0){
+			//ためし
+			MakeIcon miMP = new MakeIcon();
+			mMap.addMarker(miMP.CreateIcon(2,latLng));
+
+			//視界範囲貼り付け
+			OverlaySight ms = new OverlaySight();
+			GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(4,latLng, sightImage)); 
+			overlay.setTransparency(0.5f);
+		}
+
+		for(int i=1; i<bc.allBotData.size();i++){
+			PlayerData pd = bc.allBotData.get(i);
+			LatLng ll = new LatLng(pd.getLatitude(),pd.getLongitude());
+			MakeIcon icon = new MakeIcon();
+			mMap.addMarker(icon.CreateIcon(1,ll));
+			OverlaySight ms1 = new OverlaySight();
+			GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImage)); 
+			overlay1.setTransparency(0.5f);
+		}
+
+
+		/*追加 ポリゴンの描写用*/
+		PolygonFlash pf = new PolygonFlash();
+		mMap.addPolygon(pf.Polygon(latLng)); // 描画
+
 	}
 
-	
+
 	private void getCurrentLocation(){
-        mCustomLocationManager.getNowLocationData(LOCATION_TIME_OUT,
-                new CustomLocationManager.LocationCallback() {
-                 
-            // Timeoutすると実行
-            @Override
-            public void onTimeout() {
-                Toast.makeText(getApplicationContext(),
-                 "Time out", Toast.LENGTH_SHORT).show();
-            }
- 
-            // 位置情報が得られると実行
-            @Override
-            public void onComplete(Location location) {
-                if(location != null){
-                    mCurrentLocation = location;
-                    LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
-                    MakeIcon miMP = new MakeIcon();
-            		mMap.addMarker(miMP.CreateIcon(1,LL));
-            		
-          		  OverlaySight ms = new OverlaySight();
-          		  GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,LL, sightImage)); 
-          		  overlay.setTransparency(0.5f);
-            		
-                    Log.d("LoAR", "Current Lat, Long;"
-                        + mCurrentLocation.getLatitude()+","
-                        + mCurrentLocation.getLongitude());
-                }
-            }
-        });
-    }
-	
+		mCustomLocationManager.getNowLocationData(LOCATION_TIME_OUT,
+				new CustomLocationManager.LocationCallback() {
+
+			// Timeoutすると実行
+			@Override
+			public void onTimeout() {
+				Toast.makeText(getApplicationContext(),
+						"Time out", Toast.LENGTH_SHORT).show();
+			}
+
+			// 位置情報が得られると実行
+			@Override
+			public void onComplete(Location location) {
+				if(location != null){
+					mCurrentLocation = location;
+					LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+					MakeIcon miMP = new MakeIcon();
+					mMap.addMarker(miMP.CreateIcon(1,LL));
+
+					OverlaySight ms = new OverlaySight();
+					GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,LL, sightImage)); 
+					overlay.setTransparency(0.5f);
+
+					Log.d("LoAR", "Current Lat, Long;"
+							+ mCurrentLocation.getLatitude()+","
+							+ mCurrentLocation.getLongitude());
+				}
+			}
+		});
+	}
+
 	// 位置情報の取得を開始
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getCurrentLocation();
-    }
- 
-    @Override
-    protected void onPause() {
-    	mOrientationListener.pause();
-        super.onPause();
-    }
-    
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getCurrentLocation();
+	}
+
+	@Override
+	protected void onPause() {
+		mOrientationListener.pause();
+		super.onPause();
+	}
+
 }
