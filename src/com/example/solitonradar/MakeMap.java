@@ -38,7 +38,7 @@ public class MakeMap  extends FragmentActivity{
 		mCustomLocationManager = new CustomLocationManager(getApplicationContext());
 		mOrientationListener = new OrientationListener();
 		mOrientationListener.resume(getApplicationContext());
-		sightImage = BitmapFactory.decodeResource(resources, R.drawable.radian0);
+		sightImage = BitmapFactory.decodeResource(resources, R.drawable.sightgreen);
 		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
 		setContentView(R.layout.map);
 		setUpMapIfNeeded();//地図作成する

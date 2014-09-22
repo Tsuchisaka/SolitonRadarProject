@@ -23,15 +23,16 @@ public class OverlaySight {
 		if(0<=radian && radian<=90){
 
 			descriptor = BitmapDescriptorFactory.fromBitmap(rotateBmp);
-			float y = 0;
+			float y,D = 0;
 			double a = Math.sin(Math.toRadians(radian));
 			double b = Math.cos(Math.toRadians(radian));
 			double yy=b/(a+b);
 			y=(float)yy;
-
+			double d=(a+b)*20;
+			D=(float)d;
+			
 			options.anchor(0, y); 
-			//options.anchor(0, 1);
-			options.position(latlng, 20.0f, 20.0f); 
+			options.position(latlng, D, D); 
 
 			if(true){
 				Log.d("Tag","bpm.width="+bmp.getWidth()+"  bpm.height=" +bmp.getHeight() + " width="+rotateBmp.getWidth()+" height="+rotateBmp.getHeight());
@@ -41,42 +42,45 @@ public class OverlaySight {
 
 			descriptor = BitmapDescriptorFactory.fromBitmap(rotateBmp);
 
-			float x = 0;
+			float x,D = 0;
 			double a = Math.sin(Math.toRadians(radian-90));
 			double b = Math.cos(Math.toRadians(radian-90));
 			double xx=a/(a+b);
 			x=(float)xx;
+			double d=(a+b)*20;
+			D=(float)d;
 
 			options.anchor(x, 0); 
-			//options.anchor(0, 1);
-			options.position(latlng, 20.0f, 20.0f); 
+			options.position(latlng, D, D);  
 
 		}else if(180<radian&&radian<=270){
 			descriptor = BitmapDescriptorFactory.fromBitmap(rotateBmp);
 
-			float y = 0;
+			float y,D = 0;
 
 			double a = Math.sin(Math.toRadians(radian-180));
 			double b = Math.cos(Math.toRadians(radian-180));
 			double yy=a/(a+b);
 			y=(float)yy;
+			double d=(a+b)*20;
+			D=(float)d;
 
 			options.anchor(1, y); 
-			//options.anchor(0, 1);
-			options.position(latlng, 20.0f, 20.0f); 
+			options.position(latlng, D, D);  
 
 		}else{
 			descriptor = BitmapDescriptorFactory.fromBitmap(rotateBmp);
 
-			float x = 0;
+			float x,D = 0;
 			double a = Math.sin(Math.toRadians(radian-270));
 			double b = Math.cos(Math.toRadians(radian-270));
 			double xx=b/(a+b);
 			x=(float)xx;
+			double d=(a+b)*20;
+			D=(float)d;
 
 			options.anchor(x, 1); 
-			//options.anchor(0, 1);
-			options.position(latlng, 20.0f, 20.0f); 
+			options.position(latlng, D, D);  
 		}
 
 		options.image(descriptor); 
