@@ -34,7 +34,7 @@ public class BotController {
 				int angle = (45 * i) % 360;
 				double longitude = baseLocation.longitude;
 				double latitude = baseLocation.latitude;
-				double range = 0.0005;
+				double range = 0.0003;
 				if(i % 4 == 0){
 					longitude += range * i;  
 				}else if(i%4==1){
@@ -81,7 +81,9 @@ public class BotController {
 				findsnake = true;
 				break;
 			}else if(snakerange <= firsthintrange){
-				
+				if(snake.getLatitude() >= pdg.getLatitude()){
+					dir = (int)(Math.acos(pdg.getLongitude() - snake.getLongitude()) + 0.5);//四捨五入
+				}
 			}
 		}
 		
