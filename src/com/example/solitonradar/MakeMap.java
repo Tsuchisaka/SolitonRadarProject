@@ -112,14 +112,14 @@ public class MakeMap  extends FragmentActivity{
 		float zoom = 17;
 		//初期位置の設定latLngが緯度経度，zoomで縮尺指定
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-		
-		//試しにアイコン設置
-		MakeIcon mi = new MakeIcon();
-		mMap.addMarker(mi.CreateIcon(1,latLng));
+
+		//ためし
+		MakeIcon miMP = new MakeIcon();
+		mMap.addMarker(miMP.CreateIcon(2,latLng));
 		
 		//視界範囲貼り付け
 		  OverlaySight ms = new OverlaySight();
-		  GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,latLng, sightImage)); 
+		  GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(4,latLng, sightImage)); 
 		  overlay.setTransparency(0.5f); 
 		  
 		  
@@ -149,6 +149,11 @@ public class MakeMap  extends FragmentActivity{
                     LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
                     MakeIcon miMP = new MakeIcon();
             		mMap.addMarker(miMP.CreateIcon(1,LL));
+            		
+          		  OverlaySight ms = new OverlaySight();
+          		  GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,LL, sightImage)); 
+          		  overlay.setTransparency(0.5f);
+            		
                     Log.d("LoAR", "Current Lat, Long;"
                         + mCurrentLocation.getLatitude()+","
                         + mCurrentLocation.getLongitude());
