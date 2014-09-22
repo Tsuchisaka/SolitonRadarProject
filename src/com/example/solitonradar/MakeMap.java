@@ -109,28 +109,15 @@ public class MakeMap  extends FragmentActivity{
 		MakeIcon mi = new MakeIcon();
 		mMap.addMarker(mi.CreateIcon(1,latLng));
 		
-		// ‰æ‘œ‹y‚ÑˆÊ’uî•ñİ’è
-		/*GroundOverlayOptions options1 = new GroundOverlayOptions();
-		BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.net);
-		options1.image(bitmap);
-		options1.anchor(0.5f,0.5f);
-		options1.position(new LatLng(35.049497, 135.780738), 600.0f, 600.0f);
-		*/
-		// ƒ}ƒbƒv‚É‰æ‘œ‚ğƒI[ƒo[ƒŒƒC
-		//GroundOverlay overlay = mMap.addGroundOverlay(options1);
-		//overlay.setTransparency(0.3f);
-		
-		/*’Ç‰Á ƒ|ƒŠƒSƒ“‚Ì•`Ê—p*/
-		// İ’è
-		//PolygonOptions options2 = new PolygonOptions();
-		// •`‰æ‚·‚éÀ•W‚ğİ’è
-		//options2.addAll(createRectangle(new LatLng(35.049497, 135.780738), 0.0015, 0.0012));
-		// ”²‚«
-		//options.addHole(createRectangle(new LatLng(-22, 128), 1, 1));		
-		//options2.fillColor(0x110000FF);// “h‚è		
-		//options2.strokeColor(0xFF0000FF);// ü
-		//options2.strokeWidth(5); // ü•
-		//mMap.addPolygon(options2); // •`‰æ
+		//‹ŠE”ÍˆÍ“\‚è•t‚¯
+		  OverlaySight ms = new OverlaySight();
+		  GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(2,latLng)); 
+		  overlay.setTransparency(0.5f); 
+		  
+		  
+		  /*’Ç‰Á ƒ|ƒŠƒSƒ“‚Ì•`Ê—p*/
+		  PolygonFlash pf = new PolygonFlash();
+		  mMap.addPolygon(pf.Polygon(latLng)); // •`‰æ
 		
 	}
 
@@ -175,12 +162,4 @@ public class MakeMap  extends FragmentActivity{
         super.onPause();
     }
     
-	/*’Ç‰Á ƒ|ƒŠƒSƒ“‚Ì•`Ê*/
-	/*private List<LatLng> createRectangle(LatLng center, double halfWidth, double halfHeight) {
-		return Arrays.asList(new LatLng(center.latitude - halfHeight, center.longitude - halfWidth),
-				new LatLng(center.latitude - halfHeight, center.longitude + halfWidth),
-				new LatLng(center.latitude + halfHeight, center.longitude + halfWidth),
-				new LatLng(center.latitude + halfHeight, center.longitude - halfWidth),
-				new LatLng(center.latitude - halfHeight, center.longitude - halfWidth));
-	}*/
 }
