@@ -1453,22 +1453,26 @@ containing a value of this type.
         public static final int common_signin_btn_text_pressed_light=0x7f02006e;
         public static final int gr1=0x7f02006f;
         public static final int grid1=0x7f020070;
-        public static final int ic_launcher=0x7f020071;
-        public static final int ic_plusone_medium_off_client=0x7f020072;
-        public static final int ic_plusone_small_off_client=0x7f020073;
-        public static final int ic_plusone_standard_off_client=0x7f020074;
-        public static final int ic_plusone_tall_off_client=0x7f020075;
-        public static final int net=0x7f020076;
-        public static final int o1=0x7f020077;
-        public static final int powered_by_google_dark=0x7f020078;
-        public static final int powered_by_google_light=0x7f020079;
-        public static final int radian0=0x7f02007a;
-        public static final int radian180=0x7f02007b;
-        public static final int radian270=0x7f02007c;
-        public static final int radian90=0x7f02007d;
-        public static final int red1=0x7f02007e;
-        public static final int star=0x7f02007f;
-        public static final int thumb36=0x7f020080;
+        public static final int hunter=0x7f020071;
+        public static final int ic_launcher=0x7f020072;
+        public static final int ic_plusone_medium_off_client=0x7f020073;
+        public static final int ic_plusone_small_off_client=0x7f020074;
+        public static final int ic_plusone_standard_off_client=0x7f020075;
+        public static final int ic_plusone_tall_off_client=0x7f020076;
+        public static final int net=0x7f020077;
+        public static final int o1=0x7f020078;
+        public static final int powered_by_google_dark=0x7f020079;
+        public static final int powered_by_google_light=0x7f02007a;
+        public static final int radian0=0x7f02007b;
+        public static final int radian180=0x7f02007c;
+        public static final int radian270=0x7f02007d;
+        public static final int radian90=0x7f02007e;
+        public static final int radiooff=0x7f02007f;
+        public static final int radioon=0x7f020080;
+        public static final int ranaway=0x7f020081;
+        public static final int red1=0x7f020082;
+        public static final int star=0x7f020083;
+        public static final int thumb36=0x7f020084;
     }
     public static final class id {
         public static final int action_bar=0x7f08002e;
@@ -1482,13 +1486,13 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f080028;
         public static final int action_menu_presenter=0x7f080029;
         public static final int action_mode_close_button=0x7f080036;
-        public static final int action_settings=0x7f080051;
+        public static final int action_settings=0x7f080056;
         public static final int activity_chooser_view_content=0x7f080037;
         public static final int always=0x7f08001e;
         public static final int beginning=0x7f080023;
         public static final int book_now=0x7f080010;
-        public static final int btn1=0x7f08004e;
-        public static final int btn2=0x7f080050;
+        public static final int btn1=0x7f080053;
+        public static final int btn2=0x7f080055;
         public static final int buyButton=0x7f08000a;
         public static final int buy_now=0x7f08000f;
         public static final int buy_with_google=0x7f08000e;
@@ -1508,13 +1512,16 @@ containing a value of this type.
         public static final int holo_light=0x7f080006;
         public static final int home=0x7f080026;
         public static final int homeAsUp=0x7f080018;
+        public static final int hunter=0x7f080050;
         public static final int hybrid=0x7f080004;
         public static final int icon=0x7f08003c;
         public static final int ifRoom=0x7f08001d;
         public static final int image=0x7f080039;
+        public static final int imageView1=0x7f080051;
+        public static final int imageView2=0x7f080052;
         public static final int listMode=0x7f080014;
         public static final int list_item=0x7f08003b;
-        public static final int map=0x7f08004f;
+        public static final int map=0x7f080054;
         public static final int match_parent=0x7f08000c;
         public static final int middle=0x7f080024;
         public static final int monochrome=0x7f080013;
@@ -1525,6 +1532,8 @@ containing a value of this type.
         public static final int progress_circular=0x7f08002a;
         public static final int progress_horizontal=0x7f08002b;
         public static final int radio=0x7f080041;
+        public static final int role=0x7f08004e;
+        public static final int runaway=0x7f08004f;
         public static final int sandbox=0x7f080008;
         public static final int satellite=0x7f080002;
         public static final int search_badge=0x7f080044;
@@ -1607,8 +1616,9 @@ containing a value of this type.
         public static final int abc_simple_decor=0x7f030017;
         public static final int activity_main=0x7f030018;
         public static final int map=0x7f030019;
-        public static final int screen1=0x7f03001a;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001b;
+        public static final int radio_selector=0x7f03001a;
+        public static final int screen1=0x7f03001b;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001c;
     }
     public static final class menu {
         public static final int main=0x7f0c0000;
@@ -1774,11 +1784,14 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f050090;
+        public static final int AppBaseTheme=0x7f050091;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f050091;
+        public static final int AppTheme=0x7f050092;
+        /**  RadioButtonの場合 
+         */
+        public static final int RadioStyle=0x7f050090;
         /**  Mimic text appearance in select_dialog_item.xml 
          */
         public static final int TextAppearance_AppCompat_Base_CompactMenu_Dialog=0x7f050068;
