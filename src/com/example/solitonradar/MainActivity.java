@@ -103,7 +103,7 @@ public class MainActivity extends ActionBarActivity {
 					.getMap();
 			// Check if we were successful in obtaining the map.
 			if (mMap != null) {
-				setUpMap();
+				//setUpMap();
 			}
 		}
 	}
