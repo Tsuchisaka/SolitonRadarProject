@@ -1463,16 +1463,13 @@ containing a value of this type.
         public static final int o1=0x7f020078;
         public static final int powered_by_google_dark=0x7f020079;
         public static final int powered_by_google_light=0x7f02007a;
-        public static final int radian0=0x7f02007b;
-        public static final int radian180=0x7f02007c;
-        public static final int radian270=0x7f02007d;
-        public static final int radian90=0x7f02007e;
-        public static final int radiooff=0x7f02007f;
-        public static final int radioon=0x7f020080;
-        public static final int ranaway=0x7f020081;
-        public static final int red1=0x7f020082;
-        public static final int star=0x7f020083;
-        public static final int thumb36=0x7f020084;
+        public static final int radiooff=0x7f02007b;
+        public static final int radioon=0x7f02007c;
+        public static final int ranaway=0x7f02007d;
+        public static final int red1=0x7f02007e;
+        public static final int sightgreen=0x7f02007f;
+        public static final int sightred=0x7f020080;
+        public static final int sightyellow=0x7f020081;
     }
     public static final class id {
         public static final int action_bar=0x7f08002e;
