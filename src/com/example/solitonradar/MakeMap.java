@@ -22,7 +22,12 @@ import android.location.LocationManager;
 import android.view.View;
 import android.widget.Toast;
 import android.content.Context;
+import android.content.res.Resources;
+
 import com.google.android.gms.maps.model.PolygonOptions;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -39,13 +44,16 @@ public class MakeMap  extends FragmentActivity{
     private CustomLocationManager   mCustomLocationManager;
     private Location                mCurrentLocation;
     private OrientationListener mOrientationListener;
+    private Bitmap sightImage;
 
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
 		pp = new PlayersPosition();
+		Resources resources = getResources();
 		mCustomLocationManager = new CustomLocationManager(getApplicationContext());
 		mOrientationListener = new OrientationListener();
 		mOrientationListener.resume(getApplicationContext());
+		sightImage = BitmapFactory.decodeResource(resources, R.drawable.radian0);
   		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
 		setContentView(R.layout.map);
 		setUpMapIfNeeded();//地図作成する
@@ -111,7 +119,7 @@ public class MakeMap  extends FragmentActivity{
 		
 		//視界範囲貼り付け
 		  OverlaySight ms = new OverlaySight();
-		  GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(2,latLng)); 
+		  GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,latLng, sightImage)); 
 		  overlay.setTransparency(0.5f); 
 		  
 		  
