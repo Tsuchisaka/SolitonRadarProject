@@ -328,13 +328,9 @@ int drawable net 0x7f020076
 int drawable o1 0x7f020077
 int drawable powered_by_google_dark 0x7f020078
 int drawable powered_by_google_light 0x7f020079
-int drawable radian0 0x7f02007a
-int drawable radian180 0x7f02007b
-int drawable radian270 0x7f02007c
-int drawable radian90 0x7f02007d
-int drawable red1 0x7f02007e
-int drawable star 0x7f02007f
-int drawable thumb36 0x7f020080
+int drawable red1 0x7f02007a
+int drawable star 0x7f02007b
+int drawable thumb36 0x7f02007c
 int id action_bar 0x7f08002e
 int id action_bar_activity_content 0x7f080027
 int id action_bar_container 0x7f08002d

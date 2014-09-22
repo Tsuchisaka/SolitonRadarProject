@@ -22,8 +22,6 @@ import android.location.LocationManager;
 import android.view.View;
 import android.widget.Toast;
 import android.content.Context;
-import android.content.res.Resources;
-
 import com.google.android.gms.maps.model.PolygonOptions;
 import android.graphics.Color;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -45,7 +43,6 @@ public class MakeMap  extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
 		pp = new PlayersPosition();
-		Resources resources = getResources();
 		mCustomLocationManager = new CustomLocationManager(getApplicationContext());
 		mOrientationListener = new OrientationListener();
 		mOrientationListener.resume(getApplicationContext());
@@ -114,7 +111,7 @@ public class MakeMap  extends FragmentActivity{
 		
 		//Ž‹ŠE”ÍˆÍ“\‚è•t‚¯
 		  OverlaySight ms = new OverlaySight();
-		  GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,latLng)); 
+		  GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(2,latLng)); 
 		  overlay.setTransparency(0.5f); 
 		  
 		  
