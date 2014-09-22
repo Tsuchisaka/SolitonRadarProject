@@ -9,6 +9,8 @@ public class BotController {
 	//リストの先頭にゲーム情報、末尾にスネークの情報が入る
 	public ArrayList<PlayerData> allBotData = new ArrayList<PlayerData>();
 	private Random rnd = new Random();
+	private LatLng LatestSnakeLocation;//最新のスネークの居場所
+	private boolean isSnakeRunning = false;//スネークが走ったかどうか
 	
 	//botの人数と初期位置の座標を指定して起動する
 	public BotController(int numberOfPlayers, LatLng baseLocation){
@@ -25,6 +27,7 @@ public class BotController {
 				pd.setMacAddress("Snake");
 				pd.setIsSnake(true);
 				pd.setCoordinate(0, baseLocation.longitude, baseLocation.latitude);
+				LatestSnakeLocation = new LatLng(baseLocation.latitude,baseLocation.longitude);
 			}else{
 				pd.setMacAddress("Genome Soldier" + i);
 				pd.setIsSnake(false);
@@ -59,9 +62,27 @@ public class BotController {
 	public void BotMove(){
 		double moverange = 0.000001;
 		int dir = 0;
-		double lon = 0;
-		double lat = 0;
+		double lon = 0;//経度
+		double lat = 0;//緯度
+		boolean findsnake = false;
+		double snakerange = 0;//ゲノム兵とスネークの距離を格納
+		double firsthintrange = 0.000002;//視界内に入ったときの距離
+		double secondhintrange = 0.000004;//物音が聞こえる距離
 		//スネークの位置のヒントが出されているかのチェックを行う
+		PlayerData snake = allBotData.get(allBotData.size()-1);
+		for(int i=1;i<allBotData.size()-1;i++){
+			PlayerData pdg = allBotData.get(i);
+			snakerange = Math.sqrt(
+					(snake.getLatitude() - pdg.getLatitude()) * (snake.getLatitude() - pdg.getLatitude())
+					+(snake.getLongitude() - pdg.getLongitude()) * (snake.getLongitude() - pdg.getLongitude())
+					);
+			if(snakerange <= secondhintrange && isSnakeRunning){
+				findsnake = true;
+				break;
+			}else if(snakerange <= firsthintrange){
+				
+			}
+		}
 		
 		//スネークの移動方向を決定する
 		//スネークが走るかどうかを決定する
@@ -69,7 +90,7 @@ public class BotController {
 		
 		for(int i=1; i<allBotData.size()-1; i++){
 			PlayerData pdg = allBotData.get(i);
-			if(false){
+			if(findsnake){
 				//スネークの位置のヒントが出ている場合の処理
 			}else{
 				//出ていない場合の処理
@@ -85,7 +106,10 @@ public class BotController {
 				}
 				//絶対的な進行方向に変換する
 				dir = (pdg.getDirection() + dir) % 360;
-				
+				//移動後の位置を更新する
+				lon = pdg.getLongitude() + moverange * Math.sin(Math.toRadians(dir));
+				lat = pdg.getLatitude() - moverange * Math.cos(Math.toRadians(dir));
+				pdg.setCoordinate(dir, lon, lat);
 			}
 		}
 	}
