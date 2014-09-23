@@ -24,15 +24,15 @@ import com.google.android.gms.maps.UiSettings;
 
 
 public class MakeMap  extends FragmentActivity{
-	private PlayersPosition pp;
-	private BotController bc;
+	public PlayersPosition pp;
+	public BotController bc;
 	private GoogleMap mMap;
 	private static final int        LOCATION_TIME_OUT       = 10000; //10•b
 	private CustomLocationManager   mCustomLocationManager;
 	private Location                mCurrentLocation;
 	private OrientationListener mOrientationListener;
 	private Bitmap sightImageGreen, sightImageRed, sightImageYellow, sightImageSquare;//map‚Å•\¦‚·‚é‹ŠE”ÍˆÍ‚Ì‰æ‘œ‚ğ—pˆÓ‚µ‚Ä‚¨‚­
-	private long repeatInterval = 500;//ŒJ‚è•Ô‚µ‚ÌŠÔŠui’PˆÊFmsecj
+	private long repeatInterval = 3000;//ŒJ‚è•Ô‚µ‚ÌŠÔŠui’PˆÊFmsecj
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,7 +50,7 @@ public class MakeMap  extends FragmentActivity{
 		
 		//ˆê’èŠÔ‚²‚Æi¡‚Í500msecj‚Éˆ—‚ğs‚¤D‚µ‚½‚¢ˆ—‚ÍTask.java‚Ì’†‚Ìrun‚É‘‚¢‚Ä‚­‚¾‚³‚¢
 		Timer timer = new Timer();
-		TimerTask timerTask = new Task(this);
+		TimerTask timerTask = new Task(this, this);
 		timer.scheduleAtFixedRate(timerTask, 0, repeatInterval);
 		
 		//pp.setMyPosition(0, 0.01, 0.30);//Œ»İˆÊ’u‚ğæ“¾‚µ‚Ä‚«‚Ä‚»‚ê‚ğ“ü—Í‚µ‚Ä‚ ‚°‚ÄƒT[ƒo[‚É‘—‚é
@@ -113,7 +113,7 @@ public class MakeMap  extends FragmentActivity{
 		}
 	}
 
-	private void setUpMap() {//’n}‚ğ•\¦‚³‚¹‚éŠÖ”i’†SˆÊ’u‚âkÚ‚ğ‘I‚×‚éj
+	public void setUpMap() {//’n}‚ğ•\¦‚³‚¹‚éŠÖ”i’†SˆÊ’u‚âkÚ‚ğ‘I‚×‚éj
 		/*ƒXƒNƒ[ƒ‹‘€ì‹Ö~*/
 		/*UiSettings settings = mMap.getUiSettings();
 		settings.setScrollGesturesEnabled(false);*/
@@ -155,15 +155,17 @@ public class MakeMap  extends FragmentActivity{
 			overlayradar.setTransparency(0.1f);
 		}
 
+		/*
 		//ƒXƒl[ƒN‚ğ”­Œ©‚·‚é”»’è‚ÌƒeƒXƒgƒZƒbƒg
 		PlayerData p = bc.allBotData.get(5);
-		p.setCoordinate(270, p.getLongitude(), p.getLatitude());
+		p.setCoordinate(45, p.getLongitude(), p.getLatitude());
 		p = bc.allBotData.get(1);
 		p.setIsSnake(true);
 		p = bc.allBotData.get(bc.allBotData.size()-1);
 		p.setIsSnake(false);
 		pp.seeSnakesForm(bc.allBotData.get(1), bc.allBotData.get(5));
 		//ƒeƒXƒgƒZƒbƒg‚±‚±‚Ü‚Å
+		*/
 
 		int indexSnake = 0;
 		for(int i=1; i<bc.allBotData.size();i++){
@@ -211,7 +213,7 @@ public class MakeMap  extends FragmentActivity{
 
 	}
 
-private void ViweMap(LatLng latlng) {//’n}‚ğ•\¦‚³‚¹‚éŠÖ”i’†SˆÊ’u‚âkÚ‚ğ‘I‚×‚éj
+public void ViweMap(LatLng latlng) {//’n}‚ğ•\¦‚³‚¹‚éŠÖ”i’†SˆÊ’u‚âkÚ‚ğ‘I‚×‚éj
 	        LatLng latLng = new LatLng(35.049497, 135.780738);
 
 		UiSettings settings = mMap.getUiSettings();
@@ -219,7 +221,7 @@ private void ViweMap(LatLng latlng) {//’n}‚ğ•\¦‚³‚¹‚éŠÖ”i’†SˆÊ’u‚âkÚ‚ğ‘I‚
 		//settings.setScrollGesturesEnabled(false);
 		// ‰ñ“]ƒWƒFƒXƒ`ƒƒ[‹Ö~
 		settings.setRotateGesturesEnabled(false);
-		
+		mMap.clear();
 		/*í‚É©•ª‚ğ^‚ñ’†‚É•\¦‚·‚é‚É‚ÍˆÈ‰º‚Ps‚ÌƒRƒƒ“ƒgƒAƒEƒg‚Í‚¸‚·*/
 		//mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
 
@@ -238,17 +240,17 @@ private void ViweMap(LatLng latlng) {//’n}‚ğ•\¦‚³‚¹‚éŠÖ”i’†SˆÊ’u‚âkÚ‚ğ‘I‚
 			GroundOverlay overlayradar = mMap.addGroundOverlay(or.CreateRadar());
 			overlayradar.setTransparency(0.55f);
 		}
-
+		/*
 		//ƒXƒl[ƒN‚ğ”­Œ©‚·‚é”»’è‚ÌƒeƒXƒgƒZƒbƒg
 		PlayerData p = bc.allBotData.get(5);
-		p.setCoordinate(270, p.getLongitude(), p.getLatitude());
+		p.setCoordinate(45, p.getLongitude(), p.getLatitude());
 		p = bc.allBotData.get(1);
 		p.setIsSnake(true);
 		p = bc.allBotData.get(bc.allBotData.size()-1);
 		p.setIsSnake(false);
 		pp.seeSnakesForm(bc.allBotData.get(1), bc.allBotData.get(5));
 		//ƒeƒXƒgƒZƒbƒg‚±‚±‚Ü‚Å
-
+	*/
 		int indexSnake = 0;
 		for(int i=1; i<bc.allBotData.size();i++){
 			PlayerData pd = bc.allBotData.get(i);
@@ -266,7 +268,7 @@ private void ViweMap(LatLng latlng) {//’n}‚ğ•\¦‚³‚¹‚éŠÖ”i’†SˆÊ’u‚âkÚ‚ğ‘I‚
 			if(i==indexSnake){
 				mMap.addMarker(icon.CreateIcon(2,ll));
 			}else if(i == 5){
-				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake + ", " + pp.testDis));
+				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake + ", " + pd.getDirection() + ", " + pp.testDis));
 			}else{
 				mMap.addMarker(icon.CreateIcon(1,ll));
 			}
@@ -278,7 +280,7 @@ private void ViweMap(LatLng latlng) {//’n}‚ğ•\¦‚³‚¹‚éŠÖ”i’†SˆÊ’u‚âkÚ‚ğ‘I‚
 				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, false)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
 					overlay1.setTransparency(0.5f);
-
+					
 					//Œx‰ú‹æˆæ FŠp“x‚Í‚»‚Ìl‚©‚çŒ©‚ÄƒXƒl[ƒN‚ª‚¢‚é•ûŠp‚ğ‘ã“ü‚·‚é
 					OverlayHazard1 A = new OverlayHazard1();
 					GroundOverlay overlay5 = mMap.addGroundOverlay(A.CreateArea1(315,latLng, sightImageSquare)); 
@@ -296,15 +298,17 @@ private void ViweMap(LatLng latlng) {//’n}‚ğ•\¦‚³‚¹‚éŠÖ”i’†SˆÊ’u‚âkÚ‚ğ‘I‚
 				overlay1.setTransparency(0.5f);
 			}
 		}
+		/*
                 // ƒ}ƒbƒv‚É‰æ‘œ‚ğƒI[ƒo[ƒŒƒC
 		OverlayRadar or = new OverlayRadar();
 		GroundOverlay overlayradar = mMap.addGroundOverlay(or.CreateRadar());
 		overlayradar.setTransparency(0.55f);
-
-		/*’Ç‰Á ƒ|ƒŠƒSƒ“‚Ì•`Ê—p*/
+		*/
+		/*
+		//’Ç‰Á ƒ|ƒŠƒSƒ“‚Ì•`Ê—p
 		PolygonFlash pf = new PolygonFlash();
 		mMap.addPolygon(pf.Polygon(latLng)); // •`‰æ
-
+		*/
 	}
 
 

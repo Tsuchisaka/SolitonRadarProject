@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class OverlayHazard1 {
 
 	public GroundOverlayOptions CreateArea1(int radian, LatLng latlng, Bitmap sight){
-		double R=25;
+		double R=25;//”¼Œa
 		int rad = radian;
 		Bitmap bmp = Bitmap.createBitmap(sight);
 		Matrix mat = new Matrix();

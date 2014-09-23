@@ -65,7 +65,7 @@ public class BotController extends PlayersPosition{
 
 	//botを操作する
 	public void BotMove(){
-		double moverange = 0.000001;
+		double moverange = 0.00003;
 		int dir = 0;
 		double lon = 0;//経度
 		double lat = 0;//緯度
@@ -84,7 +84,7 @@ public class BotController extends PlayersPosition{
 		//スネークの移動方向を決定する
 		//スネークが走るかどうかを決定する
 		//スネークの移動位置を求める
-		
+		findsnake = false;
 		for(int i=1; i<allBotData.size()-1; i++){
 			PlayerData pdg = allBotData.get(i);
 			if(findsnake){

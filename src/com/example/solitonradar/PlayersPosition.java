@@ -105,7 +105,7 @@ public class PlayersPosition {
 				+(snake.getLongitude() - genome.getLongitude()) * (snake.getLongitude() - genome.getLongitude())
 				);
 		if(snakerange <= findrange){
-			double distance = (genome.getLatitude() - snake.getLatitude()) / snakerange;
+			double distance = (snake.getLatitude() - genome.getLatitude()) / snakerange;
 			if(snake.getLongitude() >= genome.getLongitude()){
 				dir = (int)(Math.toDegrees(Math.acos(distance)) + 0.5);//四捨五入
 			}else{
@@ -137,11 +137,12 @@ public class PlayersPosition {
 	public boolean hearSnakesFootsteps(PlayerData snake, PlayerData genome, boolean isSnakeRunning){
 		double snakerange;
 		double findrange = 0.0005;
+		if(isSnakeRunning == false) return false;
 		snakerange = Math.sqrt(
 				(snake.getLatitude() - genome.getLatitude()) * (snake.getLatitude() - genome.getLatitude())
 				+(snake.getLongitude() - genome.getLongitude()) * (snake.getLongitude() - genome.getLongitude())
 				);
-		if(snakerange <= findrange && isSnakeRunning){
+		if(snakerange <= findrange){
 			return true;
 		}
 		return false;
