@@ -239,6 +239,12 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 			OverlayRadar or = new OverlayRadar();
 			GroundOverlay overlayradar = mMap.addGroundOverlay(or.CreateRadar());
 			overlayradar.setTransparency(0.55f);
+			
+			// 円描写
+			OverlayCircle oc = new OverlayCircle();
+			GroundOverlay overlayradar2 = mMap.addGroundOverlay(oc.CreateCircle(latLng));
+			overlayradar2.setTransparency(0.01f);
+			
 		}
 		/*
 		//スネークを発見する判定のテストセット
