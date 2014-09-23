@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		setTitle("Soliton Radar");
 
-		Button btn1 = (Button) findViewById(R.id.btn1);
+		ImageButton btn1 = (ImageButton) findViewById(R.id.btn1);
 		btn1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
