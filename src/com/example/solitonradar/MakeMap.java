@@ -100,6 +100,10 @@ public class MakeMap  extends FragmentActivity{
 	}
 
 	private void setUpMap() {//地図を表示させる関数（中心位置や縮尺を選べる）
+		/*スクロール操作禁止*/
+		/*UiSettings settings = mMap.getUiSettings();
+		settings.setScrollGesturesEnabled(false);*/
+
 		LatLng latLng = new LatLng(35.049497, 135.780738);
 		float zoom = 17;
 		//初期位置の設定latLngが緯度経度，zoomで縮尺指定
@@ -114,6 +118,11 @@ public class MakeMap  extends FragmentActivity{
 			OverlaySight ms = new OverlaySight();
 			GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(4,latLng, sightImageGreen)); 
 			overlay.setTransparency(0.5f);
+
+			// マップに画像をオーバーレイ/////////////////////////////////////////////
+			OverlayRadar or = new OverlayRadar();
+			GroundOverlay overlayradar = mMap.addGroundOverlay(or.CreateRadar());
+			overlayradar.setTransparency(0.1f);
 		}
 
 		//スネークを発見する判定のテストセット
@@ -172,6 +181,93 @@ public class MakeMap  extends FragmentActivity{
 
 	}
 
+private void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べる）
+	        LatLng latLng = new LatLng(35.049497, 135.780738);
+
+		UiSettings settings = mMap.getUiSettings();
+		/*スクロール操作禁止*/
+		//settings.setScrollGesturesEnabled(false);
+		// 回転ジェスチャー禁止
+		settings.setRotateGesturesEnabled(false);
+		
+		/*常に自分を真ん中に表示するには以下１行のコメントアウトはずす*/
+		//mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
+
+		if(bc.allBotData.size() == 0){
+			//ためし
+			MakeIcon miMP = new MakeIcon();
+			mMap.addMarker(miMP.CreateIcon(2,latLng));
+
+			//視界範囲貼り付け
+			OverlaySight ms = new OverlaySight();
+			GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(4,latLng, sightImageGreen)); 
+			overlay.setTransparency(0.5f);
+
+			// マップに画像をオーバーレイ
+			OverlayRadar or = new OverlayRadar();
+			GroundOverlay overlayradar = mMap.addGroundOverlay(or.CreateRadar());
+			overlayradar.setTransparency(0.55f);
+		}
+
+		//スネークを発見する判定のテストセット
+		PlayerData p = bc.allBotData.get(5);
+		p.setCoordinate(270, p.getLongitude(), p.getLatitude());
+		p = bc.allBotData.get(1);
+		p.setIsSnake(true);
+		p = bc.allBotData.get(bc.allBotData.size()-1);
+		p.setIsSnake(false);
+		pp.seeSnakesForm(bc.allBotData.get(1), bc.allBotData.get(5));
+		//テストセットここまで
+
+		int indexSnake = 0;
+		for(int i=1; i<bc.allBotData.size();i++){
+			PlayerData pd = bc.allBotData.get(i);
+			if(pd.getIsSnake() == true){
+				indexSnake = i;
+				break;
+			}
+		}
+
+		//botをマップに表示させる
+		for(int i=1; i<bc.allBotData.size();i++){
+			PlayerData pd = bc.allBotData.get(i);
+			LatLng ll = new LatLng(pd.getLatitude(),pd.getLongitude());
+			MakeIcon icon = new MakeIcon();
+			if(i==indexSnake){
+				mMap.addMarker(icon.CreateIcon(2,ll));
+			}else if(i == 5){
+				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake + ", " + pp.testDis));
+			}else{
+				mMap.addMarker(icon.CreateIcon(1,ll));
+			}
+			OverlaySight ms1 = new OverlaySight();
+			if(i!=indexSnake){
+				if(pp.seeSnakesForm(bc.allBotData.get(indexSnake), pd)){
+					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageRed));
+					overlay1.setTransparency(0.5f);
+				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, false)){
+					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
+					overlay1.setTransparency(0.5f);
+				}else{
+					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageGreen));
+					overlay1.setTransparency(0.5f);
+				} 
+			}else{
+				GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageGreen));
+				overlay1.setTransparency(0.5f);
+			}
+		}
+                // マップに画像をオーバーレイ
+		OverlayRadar or = new OverlayRadar();
+		GroundOverlay overlayradar = mMap.addGroundOverlay(or.CreateRadar());
+		overlayradar.setTransparency(0.55f);
+
+		/*追加 ポリゴンの描写用*/
+		PolygonFlash pf = new PolygonFlash();
+		mMap.addPolygon(pf.Polygon(latLng)); // 描画
+
+	}
+
 
 	private void getCurrentLocation(){
 		mCustomLocationManager.getNowLocationData(LOCATION_TIME_OUT,
@@ -188,8 +284,15 @@ public class MakeMap  extends FragmentActivity{
 			@Override
 			public void onComplete(Location location) {
 				if(location != null){
+					/*すべてのオーバーレイを削除*/
+					mMap.clear();
+
 					mCurrentLocation = location;
 					LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+
+                                        /*地図上にボットとポリゴン再描写*/
+					ViweMap(LL);
+
 					MakeIcon miMP = new MakeIcon();
 					mMap.addMarker(miMP.CreateIcon(1,LL));
 
