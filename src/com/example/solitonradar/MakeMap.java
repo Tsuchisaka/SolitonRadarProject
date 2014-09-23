@@ -122,6 +122,21 @@ public class MakeMap  extends FragmentActivity{
 		//‰ŠúˆÊ’u‚Ìİ’èlatLng‚ªˆÜ“xŒo“xCzoom‚ÅkÚw’è
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
+                //‚½‚ß‚µ
+		MakeIcon m = new MakeIcon();
+		mMap.addMarker(m.CreateIcon(1,latLng));
+		//‹ŠE”ÍˆÍ“\‚è•t‚¯ ‚½‚ß‚µ
+		OverlaySight ms2 = new OverlaySight();
+		GroundOverlay overlay2 = mMap.addGroundOverlay(ms2.CreateSight(90,latLng, sightImageGreen)); 
+		overlay2.setTransparency(0.5f);
+		//Œx‰ú‹æˆæ FŠp“x‚Í‚»‚Ìl‚©‚çŒ©‚ÄƒXƒl[ƒN‚ª‚¢‚é•ûŠp‚ğ‘ã“ü‚·‚é ‚½‚ß‚µ
+		OverlayHazard1 ms3 = new OverlayHazard1();
+		GroundOverlay overlay3 = mMap.addGroundOverlay(ms3.CreateArea1(315,latLng, sightImageSquare)); 
+		overlay3.setTransparency(0.4f);
+		OverlayHazard2 ms4 = new OverlayHazard2();
+		GroundOverlay overlay4 = mMap.addGroundOverlay(ms4.CreateArea2(315,latLng, sightImageSquare)); 
+		overlay4.setTransparency(0.4f);
+
 		if(bc.allBotData.size() == 0){
 			//‚½‚ß‚µ
 			MakeIcon miMP = new MakeIcon();
@@ -132,7 +147,7 @@ public class MakeMap  extends FragmentActivity{
 			GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(4,latLng, sightImageGreen)); 
 			overlay.setTransparency(0.5f);
 
-			// ƒ}ƒbƒv‚É‰æ‘œ‚ğƒI[ƒo[ƒŒƒC/////////////////////////////////////////////
+			// ƒ}ƒbƒv‚É‰æ‘œ‚ğƒI[ƒo[ƒŒƒC
 			OverlayRadar or = new OverlayRadar();
 			GroundOverlay overlayradar = mMap.addGroundOverlay(or.CreateRadar());
 			overlayradar.setTransparency(0.1f);
@@ -261,6 +276,15 @@ private void ViweMap(LatLng latlng) {//’n}‚ğ•\¦‚³‚¹‚éŠÖ”i’†SˆÊ’u‚âkÚ‚ğ‘I‚
 				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, false)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
 					overlay1.setTransparency(0.5f);
+
+					//Œx‰ú‹æˆæ FŠp“x‚Í‚»‚Ìl‚©‚çŒ©‚ÄƒXƒl[ƒN‚ª‚¢‚é•ûŠp‚ğ‘ã“ü‚·‚é
+					OverlayHazard1 A = new OverlayHazard1();
+					GroundOverlay overlay5 = mMap.addGroundOverlay(A.CreateArea1(315,latLng, sightImageSquare)); 
+					overlay5.setTransparency(0.4f);
+					OverlayHazard2 B = new OverlayHazard2();
+					GroundOverlay overlay6 = mMap.addGroundOverlay(B.CreateArea2(315,latLng, sightImageSquare)); 
+					overlay6.setTransparency(0.4f);
+
 				}else{
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageGreen));
 					overlay1.setTransparency(0.5f);
