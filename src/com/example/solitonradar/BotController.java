@@ -74,9 +74,9 @@ public class BotController extends PlayersPosition{
 		PlayerData snake = allBotData.get(allBotData.size()-1);
 		for(int i=1;i<allBotData.size()-1;i++){
 			PlayerData pdg = allBotData.get(i);
-			if(seeSnakesForm(snake, pdg, isSnakeRunning)){
+			if(seeSnakesForm(snake, pdg)){
 				findsnake = true;
-			}else if(hearSnakesFootsteps(snake,pdg)){
+			}else if(hearSnakesFootsteps(snake,pdg, isSnakeRunning)){
 				findsnake = true;
 			}
 		}

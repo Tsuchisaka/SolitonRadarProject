@@ -11,6 +11,27 @@ public class MakeIcon{
 		MarkerOptions Icon =new MarkerOptions();
 		Icon.position(latlng);
 		Icon.anchor(0.5f, 0.5f);
+		//Icon.title("");
+		switch(RGO){
+		case 1:
+			Icon.icon(BitmapDescriptorFactory.fromResource(R.drawable.red1));
+			break;
+		case 2:
+			Icon.icon(BitmapDescriptorFactory.fromResource(R.drawable.gr1));
+			break;
+		case 3:
+			Icon.icon(BitmapDescriptorFactory.fromResource(R.drawable.o1));
+			break;
+		default:
+		}
+		return(Icon);
+	}
+	
+	public MarkerOptions CreateIcon(int RGO,LatLng latlng, String angle){
+		MarkerOptions Icon =new MarkerOptions();
+		Icon.position(latlng);
+		Icon.anchor(0.5f, 0.5f);
+		Icon.title(angle);
 		switch(RGO){
 		case 1:
 			Icon.icon(BitmapDescriptorFactory.fromResource(R.drawable.red1));

@@ -118,11 +118,12 @@ public class MakeMap  extends FragmentActivity{
 
 		//スネークを発見する判定のテストセット
 		PlayerData p = bc.allBotData.get(5);
-		p.setCoordinate(90, p.getLongitude(), p.getLatitude());
+		p.setCoordinate(270, p.getLongitude(), p.getLatitude());
 		p = bc.allBotData.get(1);
 		p.setIsSnake(true);
 		p = bc.allBotData.get(bc.allBotData.size()-1);
 		p.setIsSnake(false);
+		pp.seeSnakesForm(bc.allBotData.get(1), bc.allBotData.get(5));
 		//テストセットここまで
 
 		int indexSnake = 0;
@@ -142,16 +143,16 @@ public class MakeMap  extends FragmentActivity{
 			if(i==indexSnake){
 				mMap.addMarker(icon.CreateIcon(2,ll));
 			}else if(i == 5){
-				mMap.addMarker(icon.CreateIcon(3,ll));
+				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake + ", " + pp.testDis));
 			}else{
 				mMap.addMarker(icon.CreateIcon(1,ll));
 			}
 			OverlaySight ms1 = new OverlaySight();
 			if(i!=indexSnake){
-				if(pp.seeSnakesForm(bc.allBotData.get(indexSnake), pd, true)){
+				if(pp.seeSnakesForm(bc.allBotData.get(indexSnake), pd)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageRed));
 					overlay1.setTransparency(0.5f);
-				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd)){
+				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, false)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
 					overlay1.setTransparency(0.5f);
 				}else{
