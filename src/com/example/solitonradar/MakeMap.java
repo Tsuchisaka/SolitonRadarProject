@@ -17,6 +17,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.UiSettings;
 
 
 public class MakeMap  extends FragmentActivity{
