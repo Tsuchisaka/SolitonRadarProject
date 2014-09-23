@@ -1471,6 +1471,7 @@ containing a value of this type.
         public static final int sightgreen=0x7f020080;
         public static final int sightred=0x7f020081;
         public static final int sightyellow=0x7f020082;
+        public static final int worldmap=0x7f020083;
     }
     public static final class id {
         public static final int action_bar=0x7f08002e;
@@ -1484,13 +1485,13 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f080028;
         public static final int action_menu_presenter=0x7f080029;
         public static final int action_mode_close_button=0x7f080036;
-        public static final int action_settings=0x7f080056;
+        public static final int action_settings=0x7f080057;
         public static final int activity_chooser_view_content=0x7f080037;
         public static final int always=0x7f08001e;
         public static final int beginning=0x7f080023;
         public static final int book_now=0x7f080010;
         public static final int btn1=0x7f080053;
-        public static final int btn2=0x7f080055;
+        public static final int btn2=0x7f080056;
         public static final int buyButton=0x7f08000a;
         public static final int buy_now=0x7f08000f;
         public static final int buy_with_google=0x7f08000e;
@@ -1517,9 +1518,10 @@ containing a value of this type.
         public static final int image=0x7f080039;
         public static final int imageView1=0x7f080051;
         public static final int imageView2=0x7f080052;
+        public static final int imageView3=0x7f080054;
         public static final int listMode=0x7f080014;
         public static final int list_item=0x7f08003b;
-        public static final int map=0x7f080054;
+        public static final int map=0x7f080055;
         public static final int match_parent=0x7f08000c;
         public static final int middle=0x7f080024;
         public static final int monochrome=0x7f080013;
