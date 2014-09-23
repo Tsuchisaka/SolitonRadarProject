@@ -123,6 +123,7 @@ public class MakeMap  extends FragmentActivity{
 		//初期位置の設定latLngが緯度経度，zoomで縮尺指定
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
+		/*
                 //ためし
 		MakeIcon m = new MakeIcon();
 		mMap.addMarker(m.CreateIcon(1,latLng));
@@ -137,7 +138,7 @@ public class MakeMap  extends FragmentActivity{
 		OverlayHazard2 ms4 = new OverlayHazard2();
 		GroundOverlay overlay4 = mMap.addGroundOverlay(ms4.CreateArea2(315,latLng, sightImageSquare)); 
 		overlay4.setTransparency(0.4f);
-
+		*/
 		if(bc.allBotData.size() == 0){
 			//ためし
 			MakeIcon miMP = new MakeIcon();

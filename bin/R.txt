@@ -336,8 +336,9 @@ int drawable radioon 0x7f02007e
 int drawable red1 0x7f02007f
 int drawable sightgreen 0x7f020080
 int drawable sightred 0x7f020081
-int drawable sightyellow 0x7f020082
-int drawable worldmap 0x7f020083
+int drawable sightsquare 0x7f020082
+int drawable sightyellow 0x7f020083
+int drawable worldmap 0x7f020084
 int id action_bar 0x7f08002e
 int id action_bar_activity_content 0x7f080027
 int id action_bar_container 0x7f08002d
