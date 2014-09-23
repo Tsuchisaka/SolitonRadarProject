@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.nifty.cloud.mb.*;
 
-
+/*なしじる*/
 public class MainActivity extends ActionBarActivity {
 	
 	@Override
