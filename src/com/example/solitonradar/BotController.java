@@ -5,7 +5,7 @@ import java.util.Random;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class BotController {
+public class BotController extends PlayersPosition{
 	//リストの先頭にゲーム情報、末尾にスネークの情報が入る
 	public ArrayList<PlayerData> allBotData = new ArrayList<PlayerData>();
 	private Random rnd = new Random();
@@ -66,24 +66,14 @@ public class BotController {
 		double lon = 0;//経度
 		double lat = 0;//緯度
 		boolean findsnake = false;
-		double snakerange = 0;//ゲノム兵とスネークの距離を格納
-		double firsthintrange = 0.000002;//視界内に入ったときの距離
-		double secondhintrange = 0.000004;//物音が聞こえる距離
 		//スネークの位置のヒントが出されているかのチェックを行う
 		PlayerData snake = allBotData.get(allBotData.size()-1);
 		for(int i=1;i<allBotData.size()-1;i++){
 			PlayerData pdg = allBotData.get(i);
-			snakerange = Math.sqrt(
-					(snake.getLatitude() - pdg.getLatitude()) * (snake.getLatitude() - pdg.getLatitude())
-					+(snake.getLongitude() - pdg.getLongitude()) * (snake.getLongitude() - pdg.getLongitude())
-					);
-			if(snakerange <= secondhintrange && isSnakeRunning){
+			if(seeSnakesForm(snake, pdg, isSnakeRunning)){
 				findsnake = true;
-				break;
-			}else if(snakerange <= firsthintrange){
-				if(snake.getLatitude() >= pdg.getLatitude()){
-					dir = (int)(Math.acos(pdg.getLongitude() - snake.getLongitude()) + 0.5);//四捨五入
-				}
+			}else if(hearSnakesFootsteps(snake,pdg)){
+				findsnake = true;
 			}
 		}
 		

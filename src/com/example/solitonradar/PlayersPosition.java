@@ -94,5 +94,50 @@ public class PlayersPosition {
         });
 	}
 	
+	public boolean seeSnakesForm(PlayerData snake, PlayerData genome, boolean isSnakeRunning){
+		double snakerange;
+		double findrange = 0.00002;
+		snakerange = Math.sqrt(
+				(snake.getLatitude() - genome.getLatitude()) * (snake.getLatitude() - genome.getLatitude())
+				+(snake.getLongitude() - genome.getLongitude()) * (snake.getLongitude() - genome.getLongitude())
+				);
+		if(snakerange <= findrange && isSnakeRunning){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean hearSnakesFootsteps(PlayerData snake, PlayerData genome){
+		double snakerange;
+		double findrange = 0.00003;
+		int dir;
+		snakerange = Math.sqrt(
+				(snake.getLatitude() - genome.getLatitude()) * (snake.getLatitude() - genome.getLatitude())
+				+(snake.getLongitude() - genome.getLongitude()) * (snake.getLongitude() - genome.getLongitude())
+				);
+		if(snakerange <= findrange){
+			if(snake.getLatitude() >= genome.getLatitude()){
+				dir = (int)(Math.acos(genome.getLongitude() - snake.getLongitude()) + 0.5);//四捨五入
+			}else{
+				dir = (int)(Math.acos(genome.getLongitude() - snake.getLongitude()) + 0.5);//四捨五入
+				dir = 360 - dir;
+			}
+			if(genome.getDirection() + 45 > 359){
+				if((genome.getDirection() - 45 - 180)%360 <= (dir+180)%360 && (dir+180)%360 <= (genome.getDirection() + 45-180)%360){
+					return true;
+				}
+			}else if(genome.getDirection() - 45 < 0){
+				if((genome.getDirection() - 45+180)%360 <= (dir+180)%360 && (dir+180)%360 <= (genome.getDirection() + 45+180)%360){
+					return true;
+				}
+			}else{
+				if(genome.getDirection() - 45 <= dir && dir <= genome.getDirection() + 45){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	
 }
+		
