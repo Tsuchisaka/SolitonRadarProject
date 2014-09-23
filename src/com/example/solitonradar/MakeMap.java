@@ -27,7 +27,7 @@ public class MakeMap  extends FragmentActivity{
 	private CustomLocationManager   mCustomLocationManager;
 	private Location                mCurrentLocation;
 	private OrientationListener mOrientationListener;
-	private Bitmap sightImage;
+	private Bitmap sightImageGreen, sightImageRed, sightImageYellow;//mapで表示する視界範囲の画像を用意しておく
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,11 +38,13 @@ public class MakeMap  extends FragmentActivity{
 		mCustomLocationManager = new CustomLocationManager(getApplicationContext());
 		mOrientationListener = new OrientationListener();
 		mOrientationListener.resume(getApplicationContext());
-		sightImage = BitmapFactory.decodeResource(resources, R.drawable.sightgreen);
+		sightImageGreen = BitmapFactory.decodeResource(resources, R.drawable.sightgreen);
+		sightImageRed = BitmapFactory.decodeResource(resources, R.drawable.sightred);
+		sightImageYellow = BitmapFactory.decodeResource(resources, R.drawable.sightyellow);
 		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
 		setContentView(R.layout.map);
 		setUpMapIfNeeded();//地図作成する
-		
+
 		//役割取得・・・runawayはtrue，hunterはfalse
 		Intent intent = getIntent();
 		Boolean role = intent.getBooleanExtra("Role",false);
@@ -110,18 +112,56 @@ public class MakeMap  extends FragmentActivity{
 
 			//視界範囲貼り付け
 			OverlaySight ms = new OverlaySight();
-			GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(4,latLng, sightImage)); 
+			GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(4,latLng, sightImageGreen)); 
 			overlay.setTransparency(0.5f);
 		}
 
+		//スネークを発見する判定のテストセット
+		PlayerData p = bc.allBotData.get(5);
+		p.setCoordinate(90, p.getLongitude(), p.getLatitude());
+		p = bc.allBotData.get(1);
+		p.setIsSnake(true);
+		p = bc.allBotData.get(bc.allBotData.size()-1);
+		p.setIsSnake(false);
+		//テストセットここまで
+
+		int indexSnake = 0;
+		for(int i=1; i<bc.allBotData.size();i++){
+			PlayerData pd = bc.allBotData.get(i);
+			if(pd.getIsSnake() == true){
+				indexSnake = i;
+				break;
+			}
+		}
+
+		//botをマップに表示させる
 		for(int i=1; i<bc.allBotData.size();i++){
 			PlayerData pd = bc.allBotData.get(i);
 			LatLng ll = new LatLng(pd.getLatitude(),pd.getLongitude());
 			MakeIcon icon = new MakeIcon();
-			mMap.addMarker(icon.CreateIcon(1,ll));
+			if(i==indexSnake){
+				mMap.addMarker(icon.CreateIcon(2,ll));
+			}else if(i == 5){
+				mMap.addMarker(icon.CreateIcon(3,ll));
+			}else{
+				mMap.addMarker(icon.CreateIcon(1,ll));
+			}
 			OverlaySight ms1 = new OverlaySight();
-			GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImage)); 
-			overlay1.setTransparency(0.5f);
+			if(i!=indexSnake){
+				if(pp.seeSnakesForm(bc.allBotData.get(indexSnake), pd, true)){
+					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageRed));
+					overlay1.setTransparency(0.5f);
+				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd)){
+					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
+					overlay1.setTransparency(0.5f);
+				}else{
+					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageGreen));
+					overlay1.setTransparency(0.5f);
+				} 
+			}else{
+				GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageGreen));
+				overlay1.setTransparency(0.5f);
+			}
 		}
 
 
@@ -153,7 +193,7 @@ public class MakeMap  extends FragmentActivity{
 					mMap.addMarker(miMP.CreateIcon(1,LL));
 
 					OverlaySight ms = new OverlaySight();
-					GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,LL, sightImage)); 
+					GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,LL, sightImageGreen)); 
 					overlay.setTransparency(0.5f);
 
 					Log.d("LoAR", "Current Lat, Long;"

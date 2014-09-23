@@ -13,19 +13,20 @@ public class OverlaySight {
 
 
 	public GroundOverlayOptions CreateSight(int radian, LatLng latlng, Bitmap sight){
+		int rad = (radian - 45 + 360) % 360;
 		Bitmap bmp = Bitmap.createBitmap(sight);
 		Matrix mat = new Matrix();
-		mat.postRotate(radian);//(mOrientationListener.getAzimuth());
+		mat.postRotate(rad);//(mOrientationListener.getAzimuth());
 		Bitmap rotateBmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);  
 
 		BitmapDescriptor descriptor = null;
 		GroundOverlayOptions options = new GroundOverlayOptions(); 
-		if(0<=radian && radian<=90){
+		if(0<=rad && rad<=90){
 
 			descriptor = BitmapDescriptorFactory.fromBitmap(rotateBmp);
 			float y,D = 0;
-			double a = Math.sin(Math.toRadians(radian));
-			double b = Math.cos(Math.toRadians(radian));
+			double a = Math.sin(Math.toRadians(rad));
+			double b = Math.cos(Math.toRadians(rad));
 			double yy=b/(a+b);
 			y=(float)yy;
 			double d=(a+b)*20;
@@ -38,13 +39,13 @@ public class OverlaySight {
 				Log.d("Tag","bpm.width="+bmp.getWidth()+"  bpm.height=" +bmp.getHeight() + " width="+rotateBmp.getWidth()+" height="+rotateBmp.getHeight());
 			}
 
-		}else if(90<radian&&radian<=180){
+		}else if(90<rad&&rad<=180){
 
 			descriptor = BitmapDescriptorFactory.fromBitmap(rotateBmp);
 
 			float x,D = 0;
-			double a = Math.sin(Math.toRadians(radian-90));
-			double b = Math.cos(Math.toRadians(radian-90));
+			double a = Math.sin(Math.toRadians(rad-90));
+			double b = Math.cos(Math.toRadians(rad-90));
 			double xx=a/(a+b);
 			x=(float)xx;
 			double d=(a+b)*20;
@@ -53,13 +54,13 @@ public class OverlaySight {
 			options.anchor(x, 0); 
 			options.position(latlng, D, D);  
 
-		}else if(180<radian&&radian<=270){
+		}else if(180<rad&&rad<=270){
 			descriptor = BitmapDescriptorFactory.fromBitmap(rotateBmp);
 
 			float y,D = 0;
 
-			double a = Math.sin(Math.toRadians(radian-180));
-			double b = Math.cos(Math.toRadians(radian-180));
+			double a = Math.sin(Math.toRadians(rad-180));
+			double b = Math.cos(Math.toRadians(rad-180));
 			double yy=a/(a+b);
 			y=(float)yy;
 			double d=(a+b)*20;
@@ -72,8 +73,8 @@ public class OverlaySight {
 			descriptor = BitmapDescriptorFactory.fromBitmap(rotateBmp);
 
 			float x,D = 0;
-			double a = Math.sin(Math.toRadians(radian-270));
-			double b = Math.cos(Math.toRadians(radian-270));
+			double a = Math.sin(Math.toRadians(rad-270));
+			double b = Math.cos(Math.toRadians(rad-270));
 			double xx=b/(a+b);
 			x=(float)xx;
 			double d=(a+b)*20;

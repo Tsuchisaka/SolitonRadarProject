@@ -36,13 +36,17 @@ public class BotController extends PlayersPosition{
 				double latitude = baseLocation.latitude;
 				double range = 0.0003;
 				if(i % 4 == 0){
-					longitude += range * i;  
+					longitude += range * i;
+					latitude += range * (rnd.nextInt(3) -1);
 				}else if(i%4==1){
 					longitude -= range * i;
+					latitude += range * (rnd.nextInt(3) -1);
 				}else if(i%4==2){
 					latitude += range * i;
+					longitude += range * (rnd.nextInt(3) -1);
 				}else{
 					latitude -= range * i;
+					longitude += range * (rnd.nextInt(3) -1);
 				}
 				pd.setCoordinate(angle, longitude, latitude);
 			}
