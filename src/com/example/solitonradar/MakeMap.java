@@ -31,7 +31,7 @@ public class MakeMap  extends FragmentActivity{
 	private CustomLocationManager   mCustomLocationManager;
 	private Location                mCurrentLocation;
 	private OrientationListener mOrientationListener;
-	private Bitmap sightImageGreen, sightImageRed, sightImageYellow;//mapで表示する視界範囲の画像を用意しておく
+	private Bitmap sightImageGreen, sightImageRed, sightImageYellow, sightImageSquare;//mapで表示する視界範囲の画像を用意しておく
 	private long repeatInterval = 500;//繰り返しの間隔（単位：msec）
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +46,7 @@ public class MakeMap  extends FragmentActivity{
 		sightImageGreen = BitmapFactory.decodeResource(resources, R.drawable.sightgreen);
 		sightImageRed = BitmapFactory.decodeResource(resources, R.drawable.sightred);
 		sightImageYellow = BitmapFactory.decodeResource(resources, R.drawable.sightyellow);
+		sightImageSquare = BitmapFactory.decodeResource(resources, R.drawable.sightsquare);
 		
 		//一定時間ごと（今は500msec）に処理を行う．したい処理はTask.javaの中のrunに書いてください
 		Timer timer = new Timer();
