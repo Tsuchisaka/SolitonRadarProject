@@ -97,7 +97,7 @@ public class PlayersPosition {
 	
 	public boolean seeSnakesForm(PlayerData snake, PlayerData genome){
 		double snakerange;
-		double findrange = 0.0005;
+		double findrange = 0.000225;
 		int dir;
 		snakerange = Math.sqrt(
 				(snake.getLatitude() - genome.getLatitude()) * (snake.getLatitude() - genome.getLatitude())
@@ -132,7 +132,7 @@ public class PlayersPosition {
 	
 	public boolean hearSnakesFootsteps(PlayerData snake, PlayerData genome, boolean isSnakeRunning){
 		double snakerange;
-		double findrange = 0.0005;
+		double findrange = 0.0006;
 		if(isSnakeRunning == false) return false;
 		snakerange = Math.sqrt(
 				(snake.getLatitude() - genome.getLatitude()) * (snake.getLatitude() - genome.getLatitude())

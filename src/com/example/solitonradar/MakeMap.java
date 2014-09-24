@@ -33,6 +33,9 @@ public class MakeMap  extends FragmentActivity{
 	private OrientationListener mOrientationListener;
 	private Bitmap sightImageGreen, sightImageRed, sightImageYellow, sightImageSquare;//mapで表示する視界範囲の画像を用意しておく
 	private long repeatInterval = 3000;//繰り返しの間隔（単位：msec）
+	private int mode = 1;
+	//mode:0 自分の位置情報をサーバで共有するゲームの通常モード
+	//mode:1 サーバを介さず、自分の位置情報も取得しないbotモード
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,14 +50,14 @@ public class MakeMap  extends FragmentActivity{
 		sightImageRed = BitmapFactory.decodeResource(resources, R.drawable.sightred);
 		sightImageYellow = BitmapFactory.decodeResource(resources, R.drawable.sightyellow);
 		sightImageSquare = BitmapFactory.decodeResource(resources, R.drawable.sightsquare);
-		
+
 		//一定時間ごと（今は500msec）に処理を行う．したい処理はTask.javaの中のrunに書いてください
 		Timer timer = new Timer();
 		TimerTask timerTask = new Task(this, this);
 		timer.scheduleAtFixedRate(timerTask, 0, repeatInterval);
-		
+
 		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
-		
+
 		//地図作成する
 		setContentView(R.layout.map);
 		setUpMapIfNeeded();
@@ -120,7 +123,7 @@ public class MakeMap  extends FragmentActivity{
 		OverlayHazard2 ms4 = new OverlayHazard2();
 		GroundOverlay overlay4 = mMap.addGroundOverlay(ms4.CreateArea2(315,latLng, sightImageSquare)); 
 		overlay4.setTransparency(0.4f);
-		*/
+		 */
 		if(bc.allBotData.size() == 0){
 			//ためし
 			MakeIcon miMP = new MakeIcon();
@@ -137,17 +140,17 @@ public class MakeMap  extends FragmentActivity{
 			overlayradar.setTransparency(0.1f);
 		}
 
-		
+
 		//スネークを発見する判定のテストセット
 		PlayerData p = bc.allBotData.get(5);
-		p.setCoordinate(45, p.getLongitude(), p.getLatitude());
+		p.setCoordinate(270, p.getLongitude(), p.getLatitude());
 		p = bc.allBotData.get(1);
 		p.setIsSnake(true);
 		p = bc.allBotData.get(bc.allBotData.size()-1);
 		p.setIsSnake(false);
 		pp.seeSnakesForm(bc.allBotData.get(1), bc.allBotData.get(5));
 		//テストセットここまで
-		
+
 
 		int indexSnake = 0;
 		for(int i=1; i<bc.allBotData.size();i++){
@@ -175,17 +178,16 @@ public class MakeMap  extends FragmentActivity{
 				if(pp.seeSnakesForm(bc.allBotData.get(indexSnake), pd)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageRed));
 					overlay1.setTransparency(0.5f);
-				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, true)){
+				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, false)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
 					overlay1.setTransparency(0.5f);
-					
+
 					//警戒区域 ：角度はその人から見てスネークがいる方角を代入する
-					OverlayHazard1 A = new OverlayHazard1();
-					GroundOverlay overlay5 = mMap.addGroundOverlay(A.CreateArea1(270,latLng, sightImageSquare)); 
-					overlay5.setTransparency(0.4f);
-					OverlayHazard2 B = new OverlayHazard2();
-					GroundOverlay overlay6 = mMap.addGroundOverlay(B.CreateArea2(270,latLng, sightImageSquare)); 
-					overlay6.setTransparency(0.4f);
+					OverlayCircle oc = new OverlayCircle();
+					GroundOverlay overlayradar2 = mMap.addGroundOverlay(oc.CreateCircle(
+							new LatLng(bc.allBotData.get(indexSnake).getLatitude(),bc.allBotData.get(indexSnake).getLongitude()),
+							new LatLng(pd.getLatitude(),pd.getLongitude())));
+					overlayradar2.setTransparency(0.01f);
 				}else{
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageGreen));
 					overlay1.setTransparency(0.5f);
@@ -203,8 +205,8 @@ public class MakeMap  extends FragmentActivity{
 
 	}
 
-public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べる）
-	        LatLng latLng = new LatLng(35.049497, 135.780738);
+	public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べる）
+		LatLng latLng = new LatLng(35.049497, 135.780738);
 
 		UiSettings settings = mMap.getUiSettings();
 		/*スクロール操作禁止*/
@@ -229,12 +231,12 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 			OverlayRadar or = new OverlayRadar();
 			GroundOverlay overlayradar = mMap.addGroundOverlay(or.CreateRadar());
 			overlayradar.setTransparency(0.55f);
-			
+
 			// 円描写
-			OverlayCircle oc = new OverlayCircle();
-			GroundOverlay overlayradar2 = mMap.addGroundOverlay(oc.CreateCircle(latLng));
-			overlayradar2.setTransparency(0.01f);
-			
+			//OverlayCircle oc = new OverlayCircle();
+			//GroundOverlay overlayradar2 = mMap.addGroundOverlay(oc.CreateCircle());
+			//overlayradar2.setTransparency(0.01f);
+
 		}
 		/*
 		//スネークを発見する判定のテストセット
@@ -246,7 +248,7 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 		p.setIsSnake(false);
 		pp.seeSnakesForm(bc.allBotData.get(1), bc.allBotData.get(5));
 		//テストセットここまで
-	*/
+		 */
 		int indexSnake = 0;
 		for(int i=1; i<bc.allBotData.size();i++){
 			PlayerData pd = bc.allBotData.get(i);
@@ -276,14 +278,13 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, false)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
 					overlay1.setTransparency(0.5f);
-					
+
 					//警戒区域 ：角度はその人から見てスネークがいる方角を代入する
-					OverlayHazard1 A = new OverlayHazard1();
-					GroundOverlay overlay5 = mMap.addGroundOverlay(A.CreateArea1(315,latLng, sightImageSquare)); 
-					overlay5.setTransparency(0.4f);
-					OverlayHazard2 B = new OverlayHazard2();
-					GroundOverlay overlay6 = mMap.addGroundOverlay(B.CreateArea2(315,latLng, sightImageSquare)); 
-					overlay6.setTransparency(0.4f);
+					OverlayCircle oc = new OverlayCircle();
+					GroundOverlay overlayradar2 = mMap.addGroundOverlay(oc.CreateCircle(
+							new LatLng(bc.allBotData.get(indexSnake).getLatitude(),bc.allBotData.get(indexSnake).getLongitude()),
+							new LatLng(pd.getLatitude(),pd.getLongitude())));
+					overlayradar2.setTransparency(0.01f);
 
 				}else{
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageGreen));
@@ -299,12 +300,12 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 		OverlayRadar or = new OverlayRadar();
 		GroundOverlay overlayradar = mMap.addGroundOverlay(or.CreateRadar());
 		overlayradar.setTransparency(0.55f);
-		*/
+		 */
 		/*
 		//追加 ポリゴンの描写用
 		PolygonFlash pf = new PolygonFlash();
 		mMap.addPolygon(pf.Polygon(latLng)); // 描画
-		*/
+		 */
 	}
 
 
@@ -315,33 +316,37 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 			// Timeoutすると実行
 			@Override
 			public void onTimeout() {
-				Toast.makeText(getApplicationContext(),
-						"Time out", Toast.LENGTH_SHORT).show();
+				if(mode == 0){
+					Toast.makeText(getApplicationContext(),
+							"Time out", Toast.LENGTH_SHORT).show();
+				}
 			}
 
 			// 位置情報が得られると実行
 			@Override
 			public void onComplete(Location location) {
 				if(location != null){
-					/*すべてのオーバーレイを削除*/
-					mMap.clear();
+					if(mode == 0){
+						/*すべてのオーバーレイを削除*/
+						mMap.clear();
 
-					mCurrentLocation = location;
-					LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+						mCurrentLocation = location;
+						LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
 
-                                        /*地図上にボットとポリゴン再描写*/
-					ViweMap(LL);
+						/*地図上にボットとポリゴン再描写*/
+						ViweMap(LL);
 
-					MakeIcon miMP = new MakeIcon();
-					mMap.addMarker(miMP.CreateIcon(1,LL));
+						MakeIcon miMP = new MakeIcon();
+						mMap.addMarker(miMP.CreateIcon(1,LL));
 
-					OverlaySight ms = new OverlaySight();
-					GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,LL, sightImageGreen)); 
-					overlay.setTransparency(0.5f);
+						OverlaySight ms = new OverlaySight();
+						GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,LL, sightImageGreen)); 
+						overlay.setTransparency(0.5f);
 
-					Log.d("LoAR", "Current Lat, Long;"
-							+ mCurrentLocation.getLatitude()+","
-							+ mCurrentLocation.getLongitude());
+						Log.d("LoAR", "Current Lat, Long;"
+								+ mCurrentLocation.getLatitude()+","
+								+ mCurrentLocation.getLongitude());
+					}
 				}
 			}
 		});

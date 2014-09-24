@@ -34,7 +34,7 @@ public class BotController extends PlayersPosition{
 				int angle = (45 * i) % 360;
 				double longitude = baseLocation.longitude;
 				double latitude = baseLocation.latitude;
-				double range = 0.0003;
+				double range = 0.00022;
 				if(i % 4 == 0){
 					longitude += range * i;
 					//latitude += range * (rnd.nextInt(3) -1);
