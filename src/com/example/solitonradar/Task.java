@@ -26,9 +26,9 @@ public class Task extends TimerTask{
 			public void run() {
 				//したい処理はここの中に書いてください．今は例でｌｏｇにコメントを出すようになっています．
 				Log.d("now running! :) ","run !");
-				mm.bc.BotMove();
-				LatLng latLng = new LatLng(35.049497, 135.780738);
-				mm.ViweMap(latLng);
+				//mm.bc.BotMove();
+				//LatLng latLng = new LatLng(35.049497, 135.780738);
+				//mm.ViweMap(latLng);
 			}
 		});
 	}
