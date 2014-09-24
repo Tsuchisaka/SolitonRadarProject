@@ -154,9 +154,9 @@ public class OrientationListener implements SensorEventListener {
 			mPitchX = radianToDegrees(orientationValues[1]);
 			mRollY = radianToDegrees(orientationValues[2]);
 
-			if (DEBUG) {
+			/*if (DEBUG) {
 				Log.d(TAG, "X=" + mPitchX + "Y=" + mRollY + "Z=" + mAzimuthZ);
-			}
+			}*/
 		}
 	}
 }

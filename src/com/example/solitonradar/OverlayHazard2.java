@@ -35,10 +35,6 @@ public class OverlayHazard2 {
 			options.anchor(0, y); 
 			options.position(latlng, D, D); 
 
-			if(true){
-				Log.d("Tag","bpm.width="+bmp.getWidth()+"  bpm.height=" +bmp.getHeight() + " width="+rotateBmp.getWidth()+" height="+rotateBmp.getHeight());
-			}
-
 		}else if(90<rad&&rad<=180){
 
 			descriptor = BitmapDescriptorFactory.fromBitmap(rotateBmp);
