@@ -38,13 +38,14 @@ public class MakeMap  extends FragmentActivity{
 	private static final int        LOCATION_TIME_OUT       = 10000; //10秒
 	private CustomLocationManager   mCustomLocationManager;
 	private Location                mCurrentLocation;
-	private OrientationListener mOrientationListener;
+	public OrientationListener mOrientationListener;
 	private Bitmap sightImageGreen, sightImageRed, sightImageYellow, sightImageBlue, sightImageSquare;//mapで表示する視界範囲の画像を用意しておく
 	private long repeatInterval = 3000;//繰り返しの間隔（単位：msec）
 	public int mode = 2;
 	//mode:0 自分の位置情報をサーバで共有するゲームの通常モード
 	//mode:1 サーバを介さず、自分の位置情報も取得しないbotモード
-	//mode:2 デモ撮影用モード
+	//mode:2 デモ撮影用モード1
+	//mode:3 デモ撮影用モード2
 	private int mSoundId;
 	private SoundPool mSoundPool;
 	public boolean IamSnake = true;//
@@ -56,6 +57,7 @@ public class MakeMap  extends FragmentActivity{
 		LatLng latLng = new LatLng(35.049497, 135.780738);
 		if(mode == 1) bc = new BotController(5,latLng);
 		else if(mode == 2)bc = new BotController(1);
+		else if(mode == 3)bc = new BotController(2);
 		Resources resources = getResources();
 		mCustomLocationManager = new CustomLocationManager(getApplicationContext());
 		mOrientationListener = new OrientationListener();
@@ -83,7 +85,7 @@ public class MakeMap  extends FragmentActivity{
 				if(mode == 0 || mode == 1){
 					Intent intent = new Intent(MakeMap.this,WinningOrLosing.class );
 					startActivity(intent);
-				}else if(mode == 2){
+				}else if(mode == 2 || mode == 3){
 					SceneStart = true;
 				}
 			}
@@ -151,7 +153,68 @@ public class MakeMap  extends FragmentActivity{
 		/*常に自分を真ん中に表示するには以下１行のコメントアウトはずす*/
 		//mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
 		
-		if(mode == 1 || mode == 2){
+		if(mode == 0){
+			int indexSnake = 0;
+			for(int i=1; i<bc.allBotData.size();i++){
+				PlayerData pd = pp.allPlayersData.get(i);
+				if(pd.getIsSnake() == true){
+					indexSnake = i;
+					break;
+				}
+			}
+			
+			TextView timer = (TextView) findViewById(id.tap_text);
+			int time = pp.allPlayersData.get(indexSnake).getTime();
+			timer.setText(time + " sec left");
+			time -= (int)(repeatInterval / 1000);
+			pp.allPlayersData.get(indexSnake).setTime(time);
+			
+			for(int i=1; i<pp.allPlayersData.size();i++){
+				PlayerData pd = pp.allPlayersData.get(i);
+				LatLng ll = new LatLng(pd.getLatitude(),pd.getLongitude());
+				MakeIcon icon = new MakeIcon();
+				if(i==indexSnake){
+					if(IamSnake == true) mMap.addMarker(icon.CreateIcon(2,ll));
+				}else if(pp.mydata.getMacAddress() == pd.getMacAddress()){
+					mMap.addMarker(icon.CreateIcon(3,ll));
+				}else{
+					mMap.addMarker(icon.CreateIcon(1,ll));
+				}
+				OverlaySight ms1 = new OverlaySight();
+				if(i!=indexSnake){
+					if(pp.seeSnakesForm(bc.allBotData.get(indexSnake), pd)){
+						GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageRed));
+						overlay1.setTransparency(0.5f);
+						// 再生
+						mSoundPool.play(mSoundId, 1.0F, 1.0F, 0, 0, 1.0F);
+						((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(500);
+					}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, bc.isSnakeRunning)){
+						GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
+						overlay1.setTransparency(0.5f);
+						// 再生
+						mSoundPool.play(mSoundId, 1.0F, 1.0F, 0, 0, 1.0F);
+						((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(500);
+
+						//警戒区域 ：角度はその人から見てスネークがいる方角を代入する
+						OverlayCircle oc = new OverlayCircle();
+						GroundOverlay overlayradar2 = mMap.addGroundOverlay(oc.CreateCircle(
+								new LatLng(bc.allBotData.get(indexSnake).getLatitude(),bc.allBotData.get(indexSnake).getLongitude()),
+								new LatLng(pd.getLatitude(),pd.getLongitude())));
+						overlayradar2.setTransparency(0.01f);
+
+					}else{
+						GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageGreen));
+						overlay1.setTransparency(0.5f);
+					} 
+				}else{
+					if(IamSnake == true){
+						GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageBlue));
+						overlay1.setTransparency(0.5f);
+					}
+				}
+			}
+		}
+		else if(mode == 1 || mode == 2 || mode == 3){
 			/*
 			//スネークを発見する判定のテストセット
 			PlayerData p = bc.allBotData.get(5);
@@ -256,13 +319,14 @@ public class MakeMap  extends FragmentActivity{
 			public void onComplete(Location location) {
 				if(location != null){
 					if(mode == 0){
-						/*すべてのオーバーレイを削除*/
+						/*
+						//すべてのオーバーレイを削除
 						mMap.clear();
 
 						mCurrentLocation = location;
 						LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
 
-						/*地図上にボットとポリゴン再描写*/
+						//地図上にボットとポリゴン再描写
 						ViweMap(LL);
 
 						MakeIcon miMP = new MakeIcon();
@@ -271,7 +335,11 @@ public class MakeMap  extends FragmentActivity{
 						OverlaySight ms = new OverlaySight();
 						GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,LL, sightImageGreen)); 
 						overlay.setTransparency(0.5f);
-
+						*/
+						
+						pp.mydata.setCoordinate(pp.mydata.getDirection(), 
+								mCurrentLocation.getLongitude(), mCurrentLocation.getLatitude());
+						
 						Log.d("LoAR", "Current Lat, Long;"
 								+ mCurrentLocation.getLatitude()+","
 								+ mCurrentLocation.getLongitude());

@@ -26,9 +26,17 @@ public class Task extends TimerTask{
 			public void run() {
 				//したい処理はここの中に書いてください．今は例でｌｏｇにコメントを出すようになっています．
 				Log.d("now running! :) ","run !");
-				if(mm.mode == 1) mm.bc.BotMove();
+				if(mm.mode == 1){
+					mm.pp.mydata.setCoordinate(mm.mOrientationListener.getAzimuth(),
+							mm.pp.mydata.getLongitude(), mm.pp.mydata.getLatitude());
+					mm.pp.setMyPosition(mm.pp.mydata.getDirection(), 
+							mm.pp.mydata.getLongitude(), mm.pp.mydata.getLatitude());
+				}
+				else if(mm.mode == 1) mm.bc.BotMove();
 				else if(mm.mode == 2 && mm.SceneStart == true){
 					mm.bc.BotMoveForSet1();
+				}else if(mm.mode == 3 && mm.SceneStart == true){
+					mm.bc.BotMoveForSet2();
 				}
 				LatLng latLng = new LatLng(35.049497, 135.780738);
 				mm.ViweMap(latLng);

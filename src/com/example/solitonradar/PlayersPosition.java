@@ -15,7 +15,7 @@ import android.app.AlertDialog;
 import android.util.Log;
 
 public class PlayersPosition {
-	private PlayerData mydata;//自分のマックアドレスと座標と向きと役割の情報を保持（詳細はPlayerData参照）
+	public PlayerData mydata;//自分のマックアドレスと座標と向きと役割の情報を保持（詳細はPlayerData参照）
 	public ArrayList<PlayerData> allPlayersData = new ArrayList<PlayerData>();//全員のデーターを保存するためのリスト
 	public int angleToSnake = -1;
 	private boolean IamSnake = false;

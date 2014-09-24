@@ -60,8 +60,9 @@ public class BotController extends PlayersPosition{
 	public BotController(int setNum){
 		int numberOfPlayers = 2;
 		int angle = 0;
-		LatLng baseLocation = new LatLng(35.048471, 135.780973); 
+		 
 		if(setNum == 1){
+			LatLng baseLocation = new LatLng(35.048471, 135.780973);
 			numberOfPlayers = 2;
 			for(int i=0; i<=numberOfPlayers;i++){
 				PlayerData pd = new PlayerData();
@@ -82,6 +83,33 @@ public class BotController extends PlayersPosition{
 					double longitude = 135.780813;
 					double latitude = 35.048607;
 					angle = 185;
+					pd.setCoordinate(angle, longitude, latitude);
+				}
+				pd.setTime(300);
+				allBotData.add(pd);
+			}
+		}else if(setNum == 2){
+			LatLng baseLocation = new LatLng(35.048618, 135.781390);
+			numberOfPlayers = 2;
+			for(int i=0; i<=numberOfPlayers;i++){
+				PlayerData pd = new PlayerData();
+				if(i==0){
+					pd.setMacAddress("MASTER");
+					pd.setIsSnake(false);
+					pd.setCoordinate(0, baseLocation.longitude, baseLocation.latitude);
+				}else if(i==numberOfPlayers){
+					pd.setMacAddress("Snake");
+					pd.setIsSnake(true);
+					angle = 350;
+					pd.setCoordinate(angle, baseLocation.longitude, baseLocation.latitude);
+					LatestSnakeLocation = new LatLng(baseLocation.latitude,baseLocation.longitude);
+				}else{
+					pd.setMacAddress("Genome Soldier" + i);
+					if(i == 1)MyName = pd.getMacAddress();
+					pd.setIsSnake(false);
+					double longitude = 135.781448;
+					double latitude = 35.048539;
+					angle = 330;
 					pd.setCoordinate(angle, longitude, latitude);
 				}
 				pd.setTime(300);
@@ -220,5 +248,36 @@ public class BotController extends PlayersPosition{
 		sceneNum++;
 	}
 
-
+	public void BotMoveForSet2(){
+		double lon = 0;
+		double lat = 0;
+		int dir = 0;
+		double SpeedWalk = 0.00002;
+		double SpeedRun = 0.00006;
+		double SpeedStay = 0.0;
+		double moverange = SpeedWalk;
+		PlayerData gen = allBotData.get(1);
+		PlayerData snk = allBotData.get(2);
+		if(sceneNum == 0)snk.setTime(50);
+		if(sceneNum < 3){
+			isSnakeRunning = false;
+		}
+		else if(sceneNum < 7){
+			moverange = SpeedWalk;
+			dir = 330;
+			lon = gen.getLongitude() + moverange * Math.sin(Math.toRadians(dir));
+			lat = gen.getLatitude() + moverange * Math.cos(Math.toRadians(dir));
+			gen.setCoordinate(dir, lon, lat);
+		}
+		else if(sceneNum < 20){
+			
+		}
+		else{
+			sceneNum = -1;
+			isSnakeRunning = false;
+			snk.setCoordinate(350, 135.781390, 35.048618);
+			gen.setCoordinate(330, 135.781448, 35.048539);
+		}
+		sceneNum++;
+	}
 }
