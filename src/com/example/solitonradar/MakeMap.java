@@ -65,11 +65,12 @@ public class MakeMap  extends FragmentActivity{
 
 		//地図作成する
 		setContentView(R.layout.map);
+		setTitle("HAS Radar");
 		setUpMapIfNeeded();
 
 		//役割取得・・・runawayはtrue，hunterはfalse
 		Intent intent = getIntent();
-		Boolean role = intent.getBooleanExtra("Role",false);
+		boolean role = intent.getBooleanExtra("Role",false);
 
 		ImageButton captured = (ImageButton) findViewById(R.id.captured);
 		intent.putExtra("Role",false);
@@ -202,7 +203,7 @@ public class MakeMap  extends FragmentActivity{
 			if(i==indexSnake){
 				mMap.addMarker(icon.CreateIcon(2,ll));
 			}else if(i == 5){
-				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake + ", " + pp.testDis));
+				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake));
 			}else{
 				mMap.addMarker(icon.CreateIcon(1,ll));
 			}
@@ -292,7 +293,7 @@ public class MakeMap  extends FragmentActivity{
 			if(i==indexSnake){
 				mMap.addMarker(icon.CreateIcon(2,ll));
 			}else if(i == 5){
-				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake + ", " + pd.getDirection() + ", " + pp.testDis));
+				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake + ", " + pd.getDirection()));
 			}else{
 				mMap.addMarker(icon.CreateIcon(1,ll));
 			}
@@ -373,9 +374,9 @@ public class MakeMap  extends FragmentActivity{
 					GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,LL, sightImageGreen)); 
 					overlay.setTransparency(0.5f);
 
-					Log.d("LoAR", "Current Lat, Long;"
+					/*Log.d("LoAR", "Current Lat, Long;"
 							+ mCurrentLocation.getLatitude()+","
-							+ mCurrentLocation.getLongitude());
+							+ mCurrentLocation.getLongitude());*/
 				}
 			}
 		});

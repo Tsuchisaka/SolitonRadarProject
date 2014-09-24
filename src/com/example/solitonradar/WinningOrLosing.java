@@ -17,6 +17,7 @@ public class WinningOrLosing extends Activity {
 	
 		if(role == true){
 			setContentView(R.layout.agent_win);
+			setTitle("HAS Radar");
 			ImageButton back1 = (ImageButton) findViewById(R.id.back1);
 			back1.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -28,6 +29,7 @@ public class WinningOrLosing extends Activity {
 		}
 		else{
 			setContentView(R.layout.guard_win);
+			setTitle("HAS Radar");
 			ImageButton back2 = (ImageButton) findViewById(R.id.back2);
 			back2.setOnClickListener(new View.OnClickListener() {
 				@Override

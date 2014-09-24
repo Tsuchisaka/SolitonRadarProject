@@ -21,7 +21,7 @@ public class MainActivity extends ActionBarActivity {
 		NCMB.initialize(this, "480c1f99d7b45ae9459d50f303e95af736fe32392b914235b624c542d54ccf10", "29f491b4e283238a7ea6c18c1b369d9b39f8d507d7c3e30325fb48c4e14515e4");
 		// res/layout/top.xml を初期画面に
 		setContentView(R.layout.activity_main);
-		setTitle("Soliton Radar");
+		setTitle("HAS Radar");
 
 		ImageButton btn1 = (ImageButton) findViewById(R.id.btn1);
 		btn1.setOnClickListener(new View.OnClickListener() {
