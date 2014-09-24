@@ -9,6 +9,8 @@ import java.util.*;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.model.LatLng;
 import com.nifty.cloud.mb.*;
 
 import android.app.AlertDialog;
@@ -19,10 +21,17 @@ public class PlayersPosition {
 	public ArrayList<PlayerData> allPlayersData = new ArrayList<PlayerData>();//全員のデーターを保存するためのリスト
 	public int angleToSnake = -1;
 	private boolean IamSnake = false;
+	private LatLng latestSnakeLocation = new LatLng(0,0);
+	public boolean IsSnakeRunning = false;
+	public boolean start = false;
+	private int gameTime = 600;//sec
 	
 	public PlayersPosition(){//初期化したい内容を書き込む
 		mydata = new PlayerData();
 		mydata.setMacAddress(MacAddress.getMacAddressString());
+		mydata.setCoordinate(180, 135.780738, 35.049497);
+		mydata.setTime(gameTime);
+		start = true;
 	}
 	
 	public String getMacAddress(){return mydata.getMacAddress();}
@@ -47,7 +56,7 @@ public class PlayersPosition {
                 	Log.i(this.getClass().getName(), "New MacAddress.");
                 }
                 Log.i(this.getClass().getName(), "Rewriting DB...");
-            	obj.put("longgitude", longitude);
+            	obj.put("longitude", longitude);
             	obj.put("latitude", latitude);
             	obj.put("direction", direction);
             	obj.put("SNAKE", mydata.getIsSnake());
@@ -79,8 +88,19 @@ public class PlayersPosition {
                 	pd.setTime(obj.getInt("direction"));
                 	pd.setGameState(obj.getBoolean("SNAKE"));
                 	pd.setCoordinate(obj.getInt("direction"), obj.getDouble("longitude"), obj.getDouble("latitude"));
+                	Log.d("getLocation", "getDouble:" + obj.getDouble("longitude") + ", " + obj.getDouble("latitude"));
+                	Log.d("getLocation", "getString:" + obj.getString("longitude") + ", " + obj.getString("latitude"));
+                	if(pd.getIsSnake() == true){
+                		double moverange = Math.sqrt((latestSnakeLocation.latitude - pd.getLatitude())*(latestSnakeLocation.latitude - pd.getLatitude())
+                				+(latestSnakeLocation.longitude - pd.getLongitude())*(latestSnakeLocation.longitude - pd.getLongitude()));
+                		IsSnakeRunning = false;
+                		if(latestSnakeLocation.longitude != 0 || latestSnakeLocation.latitude != 0){
+                			if(moverange >= 0.00003) IsSnakeRunning = true;
+                		}
+                		latestSnakeLocation = new LatLng(pd.getLatitude(),pd.getLongitude());
+                	}
                 	allPlayersData.add(pd);
-                	Log.i(this.getClass().getName(), "Got " + pd.getMacAddress());
+                	Log.i("GetMacAddress", "Got " + pd.getMacAddress());
                 }
                 
                 //残り時間とゲームの状況を同期
@@ -94,6 +114,31 @@ public class PlayersPosition {
                 }
             }
         });
+	}
+	
+	public void makeMASTER(){
+		NCMBQuery<NCMBObject> query = NCMBQuery.getQuery("PlayerPosition");
+		query.whereEqualTo("MacAddress", "MASTER");
+		query.findInBackground(new FindCallback<NCMBObject>() {
+            @Override
+            public void done(List<NCMBObject> result, NCMBException e){
+            	NCMBObject obj;
+                if (result.isEmpty() != true){
+                    //MASTERが見つかった	
+                	Log.i(this.getClass().getName(), "MASTER was found.");
+                } else {
+                    //MASTERが見つからなかった
+                	obj = new NCMBObject("PlayerPosition");
+                	obj.put("MacAddress", "MASTER");
+                	Log.i(this.getClass().getName(), "New MacAddress.");
+                	obj.put("direction", gameTime);
+                	obj.put("SNAKE", false);
+                	obj.put("longitude", 0);
+                	obj.put("latitude", 0);
+                	obj.saveEventually();
+                }
+            }
+		});
 	}
 	
 	public void deleteDataBase(){

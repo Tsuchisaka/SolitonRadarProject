@@ -1,5 +1,6 @@
 package com.example.solitonradar;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,6 +30,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.UiSettings;
+import com.nifty.cloud.mb.FindCallback;
+import com.nifty.cloud.mb.NCMBException;
+import com.nifty.cloud.mb.NCMBObject;
+import com.nifty.cloud.mb.NCMBQuery;
 
 
 public class MakeMap  extends FragmentActivity{
@@ -41,7 +46,7 @@ public class MakeMap  extends FragmentActivity{
 	public OrientationListener mOrientationListener;
 	private Bitmap sightImageGreen, sightImageRed, sightImageYellow, sightImageBlue, sightImageSquare;//mapで表示する視界範囲の画像を用意しておく
 	private long repeatInterval = 3000;//繰り返しの間隔（単位：msec）
-	public int mode = 2;
+	public int mode = 0;
 	//mode:0 自分の位置情報をサーバで共有するゲームの通常モード
 	//mode:1 サーバを介さず、自分の位置情報も取得しないbotモード
 	//mode:2 デモ撮影用モード1
@@ -50,6 +55,7 @@ public class MakeMap  extends FragmentActivity{
 	private SoundPool mSoundPool;
 	public boolean IamSnake = true;//
 	public boolean SceneStart = false;//デモ撮影用のシーンを開始する
+	private Task timerTask;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,6 +65,8 @@ public class MakeMap  extends FragmentActivity{
 		else if(mode == 2)bc = new BotController(1);
 		else if(mode == 3)bc = new BotController(2);
 		Resources resources = getResources();
+		//bc = new BotController(5,latLng);
+		//makeBotDataBaseForTest();
 		mCustomLocationManager = new CustomLocationManager(getApplicationContext());
 		mOrientationListener = new OrientationListener();
 		mOrientationListener.resume(getApplicationContext());
@@ -67,9 +75,9 @@ public class MakeMap  extends FragmentActivity{
 		sightImageYellow = BitmapFactory.decodeResource(resources, R.drawable.sightyellow);
 		sightImageBlue = BitmapFactory.decodeResource(resources, R.drawable.sightblue);
 		sightImageSquare = BitmapFactory.decodeResource(resources, R.drawable.sightsquare);
-
-		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
 		
+		setTitle("HAS Radar");
+
 		//地図作成する
 		setContentView(R.layout.map);
 		setUpMapIfNeeded();
@@ -78,24 +86,48 @@ public class MakeMap  extends FragmentActivity{
 		Intent intent = getIntent();
 		IamSnake = intent.getBooleanExtra("Role",false);
 		ImageButton captured = (ImageButton) findViewById(R.id.captured);
-		intent.putExtra("Role",false);
 		captured.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if(mode == 0 || mode == 1){
-					Intent intent = new Intent(MakeMap.this,WinningOrLosing.class );
-					startActivity(intent);
+					if(mode == 0){
+						timerTask.enable = false;
+						pp.deleteDataBase();
+					}
+					Intent intent2 = new Intent(MakeMap.this,WinningOrLosing.class );
+					intent2.putExtra("Role",false);
+					startActivity(intent2);
 				}else if(mode == 2 || mode == 3){
 					SceneStart = true;
 				}
 			}
 		});
-		
-		
-		
+
+		if(mode == 0){
+			pp.makeMASTER();
+			NCMBQuery<NCMBObject> query = NCMBQuery.getQuery("PlayerPosition");
+			query.whereNotEqualTo("MacAdress", " ");
+			query.findInBackground(new FindCallback<NCMBObject>() {
+				@Override
+				public void done(List<NCMBObject> result, NCMBException e){
+					for(int i=0; i<result.size();i++){
+						NCMBObject obj = result.get(i);
+						if(obj.getString("MacAddress") == "MASTER"){
+							continue;
+						}
+						if(obj.getBoolean("SNAKE") == true){
+							IamSnake = false;
+							break;
+						}
+					}
+				}
+			});
+		}
+
 		//一定時間ごと（今は500msec）に処理を行う．したい処理はTask.javaの中のrunに書いてください
 		Timer timer = new Timer();
-		TimerTask timerTask = new Task(this, this);
+		timerTask = new Task(this, this);
+		timerTask.enable = true;
 		timer.scheduleAtFixedRate(timerTask, 0, repeatInterval);
 	}
 
@@ -142,7 +174,8 @@ public class MakeMap  extends FragmentActivity{
 	}
 
 	public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べる）
-		LatLng latLng = new LatLng(35.049497, 135.780738);
+		Log.d("now viewMap :) ","run 0");
+		LatLng latLng = new LatLng(pp.mydata.getLatitude(), pp.mydata.getLongitude());
 
 		UiSettings settings = mMap.getUiSettings();
 		/*スクロール操作禁止*/
@@ -151,26 +184,44 @@ public class MakeMap  extends FragmentActivity{
 		settings.setRotateGesturesEnabled(false);
 		mMap.clear();
 		/*常に自分を真ん中に表示するには以下１行のコメントアウトはずす*/
-		//mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-		
-		if(mode == 0){
+		//mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+		if(mode == 0 && pp.allPlayersData.size() >= 1){
+			Log.d("now viewMap :) ","run 1");
 			int indexSnake = 0;
-			for(int i=1; i<bc.allBotData.size();i++){
+			int indexMaster = 0;
+			for(int i=1; i<pp.allPlayersData.size();i++){
 				PlayerData pd = pp.allPlayersData.get(i);
 				if(pd.getIsSnake() == true){
 					indexSnake = i;
-					break;
+				}
+				if(pd.getMacAddress() == "MASTER"){
+					indexMaster = i;
 				}
 			}
-			
+			Log.d("now viewMap :) ","run 2");
+
 			TextView timer = (TextView) findViewById(id.tap_text);
-			int time = pp.allPlayersData.get(indexSnake).getTime();
+			int time = pp.allPlayersData.get(indexMaster).getTime();
 			timer.setText(time + " sec left");
 			time -= (int)(repeatInterval / 1000);
-			pp.allPlayersData.get(indexSnake).setTime(time);
+			pp.allPlayersData.get(indexMaster).setTime(time);
 			
+			if(time < 0){
+				if(mode == 0){
+					timerTask.enable = false;
+					pp.deleteDataBase();
+				}
+				Intent intent2 = new Intent(MakeMap.this,WinningOrLosing.class );
+				intent2.putExtra("Role",true);
+				startActivity(intent2);
+			}
+
+			Log.d("now viewMap :) ","run 3");
+
 			for(int i=1; i<pp.allPlayersData.size();i++){
 				PlayerData pd = pp.allPlayersData.get(i);
+				Log.d("now viewMap :) ","Mac:" + pd.getMacAddress());
 				LatLng ll = new LatLng(pd.getLatitude(),pd.getLongitude());
 				MakeIcon icon = new MakeIcon();
 				if(i==indexSnake){
@@ -180,15 +231,17 @@ public class MakeMap  extends FragmentActivity{
 				}else{
 					mMap.addMarker(icon.CreateIcon(1,ll));
 				}
+				Log.d("SetIcon","Icon:" + pd.getMacAddress());
+				Log.d("SetIcon","Locate:" + pd.getDirection() + ", " + pd.getLatitude() + ", " + pd.getLongitude());
 				OverlaySight ms1 = new OverlaySight();
 				if(i!=indexSnake){
-					if(pp.seeSnakesForm(bc.allBotData.get(indexSnake), pd)){
+					if(pp.seeSnakesForm(pp.allPlayersData.get(indexSnake), pd)){
 						GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageRed));
 						overlay1.setTransparency(0.5f);
 						// 再生
 						mSoundPool.play(mSoundId, 1.0F, 1.0F, 0, 0, 1.0F);
 						((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(500);
-					}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, bc.isSnakeRunning)){
+					}else if(pp.hearSnakesFootsteps(pp.allPlayersData.get(indexSnake), pd, pp.IsSnakeRunning)){
 						GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
 						overlay1.setTransparency(0.5f);
 						// 再生
@@ -198,7 +251,7 @@ public class MakeMap  extends FragmentActivity{
 						//警戒区域 ：角度はその人から見てスネークがいる方角を代入する
 						OverlayCircle oc = new OverlayCircle();
 						GroundOverlay overlayradar2 = mMap.addGroundOverlay(oc.CreateCircle(
-								new LatLng(bc.allBotData.get(indexSnake).getLatitude(),bc.allBotData.get(indexSnake).getLongitude()),
+								new LatLng(pp.allPlayersData.get(indexSnake).getLatitude(),pp.allPlayersData.get(indexSnake).getLongitude()),
 								new LatLng(pd.getLatitude(),pd.getLongitude())));
 						overlayradar2.setTransparency(0.01f);
 
@@ -234,13 +287,13 @@ public class MakeMap  extends FragmentActivity{
 					break;
 				}
 			}
-			
+
 			TextView timer = (TextView) findViewById(id.tap_text);
 			int time = bc.allBotData.get(indexSnake).getTime();
 			timer.setText(time + " sec left");
 			time -= (int)(repeatInterval / 1000);
 			bc.allBotData.get(indexSnake).setTime(time);
-			
+
 			//botをマップに表示させる
 			for(int i=1; i<bc.allBotData.size();i++){
 				PlayerData pd = bc.allBotData.get(i);
@@ -248,7 +301,7 @@ public class MakeMap  extends FragmentActivity{
 				MakeIcon icon = new MakeIcon();
 				if(i==indexSnake){
 					if(IamSnake == true) mMap.addMarker(icon.CreateIcon(2,ll));
-				}else if(i == 5){
+				}else if(i == 1){
 					mMap.addMarker(icon.CreateIcon(3,ll));
 				}else{
 					mMap.addMarker(icon.CreateIcon(1,ll));
@@ -286,6 +339,9 @@ public class MakeMap  extends FragmentActivity{
 					}
 				}
 			}
+		}else{
+			TextView timer = (TextView) findViewById(id.tap_text);
+			timer.setText("読み込み中");
 		}
 		/*
                 // マップに画像をオーバーレイ
@@ -335,11 +391,11 @@ public class MakeMap  extends FragmentActivity{
 						OverlaySight ms = new OverlaySight();
 						GroundOverlay overlay = mMap.addGroundOverlay(ms.CreateSight(1,LL, sightImageGreen)); 
 						overlay.setTransparency(0.5f);
-						*/
-						
+						 */
+
 						pp.mydata.setCoordinate(pp.mydata.getDirection(), 
 								mCurrentLocation.getLongitude(), mCurrentLocation.getLatitude());
-						
+
 						Log.d("LoAR", "Current Lat, Long;"
 								+ mCurrentLocation.getLatitude()+","
 								+ mCurrentLocation.getLongitude());
@@ -365,6 +421,23 @@ public class MakeMap  extends FragmentActivity{
 		super.onPause();
 		// リリース
 		mSoundPool.release();
+	}
+
+	private void makeBotDataBaseForTest(){
+		for(int i=0; i<bc.allBotData.size();i++){
+			NCMBObject obj;
+			obj = new NCMBObject("PlayerPosition");
+			obj.put("MacAddress", bc.allBotData.get(i).getMacAddress());
+			Log.i(this.getClass().getName(), "New MacAddress.");
+
+			Log.i(this.getClass().getName(), "Rewriting DB...");
+			obj.put("longitude", bc.allBotData.get(i).getLongitude());
+			obj.put("latitude", bc.allBotData.get(i).getLatitude());
+			obj.put("direction", bc.allBotData.get(i).getDirection());
+			obj.put("SNAKE", bc.allBotData.get(i).getIsSnake());
+			//データ書き込みでAPIリクエスト消費
+			obj.saveEventually();
+		}
 	}
 
 }

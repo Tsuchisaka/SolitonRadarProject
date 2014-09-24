@@ -13,6 +13,7 @@ public class Task extends TimerTask{
 	private Handler handler;
 	private Context context;
 	private MakeMap mm;
+	public boolean enable = false;
 	public Task(Context context, MakeMap makemap) {
 		handler = new Handler();
 		this.context = context;
@@ -24,9 +25,10 @@ public class Task extends TimerTask{
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
+				if(enable == false)return;
 				//したい処理はここの中に書いてください．今は例でｌｏｇにコメントを出すようになっています．
 				Log.d("now running! :) ","run !");
-				if(mm.mode == 1){
+				if(mm.mode == 0 && mm.pp.start == true){
 					mm.pp.mydata.setCoordinate(mm.mOrientationListener.getAzimuth(),
 							mm.pp.mydata.getLongitude(), mm.pp.mydata.getLatitude());
 					mm.pp.setMyPosition(mm.pp.mydata.getDirection(), 
@@ -39,7 +41,9 @@ public class Task extends TimerTask{
 					mm.bc.BotMoveForSet2();
 				}
 				LatLng latLng = new LatLng(35.049497, 135.780738);
-				mm.ViweMap(latLng);
+				Log.d("now running! :) ","run 2!");
+				if((mm.mode == 0 && mm.pp.start == true) || mm.mode != 0)
+					mm.ViweMap(latLng);
 			}
 		});
 	}
