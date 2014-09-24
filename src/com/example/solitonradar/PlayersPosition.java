@@ -96,6 +96,21 @@ public class PlayersPosition {
         });
 	}
 	
+	public void deleteDataBase(){
+		NCMBQuery<NCMBObject> query = NCMBQuery.getQuery("PlayerPosition");
+		query.whereNotEqualTo("MacAdress", "MASTER");
+		query.findInBackground(new FindCallback<NCMBObject>() {
+            @Override
+            public void done(List<NCMBObject> result, NCMBException e){
+            	allPlayersData.clear();
+                for(int i=0; i<result.size();i++){
+                	NCMBObject obj = result.get(i);
+                	obj.deleteInBackground();
+                }
+            }
+        });
+	}
+	
 	public boolean seeSnakesForm(PlayerData snake, PlayerData genome){
 		double snakerange;
 		double findrange = 0.000225;
