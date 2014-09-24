@@ -26,7 +26,9 @@ public class MacAddress {
 	            mStringBuilder.append(", mac:" + e.getValue());
 	            mStringBuilder.append("\n");
 	        }
-	        return mStringBuilder.toString();
+	        String[] parts = mStringBuilder.toString().split(", ");
+	        String[] parts2 = parts[parts.length - 1].split("\n");
+	        return parts2[parts2.length - 1];
 	    }
 	 
 	    @SuppressLint("NewApi") public static Map<String, String> getMacAddress() {

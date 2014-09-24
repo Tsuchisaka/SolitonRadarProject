@@ -16,7 +16,9 @@ public class OrientationListener implements SensorEventListener {
 	/** デバッグ用 */
 	private static final boolean DEBUG = true;
 	private static final String TAG = "OrientationListener";
-
+	private int interval = 20;//n回に一回センサーの値を獲得
+	private int count = 0;
+	
 	/** 行列数 */
 	private static final int MATRIX_SIZE = 16;
 	/** 三次元(XYZ) */
@@ -120,6 +122,9 @@ public class OrientationListener implements SensorEventListener {
 
 	@Override
 	public synchronized void onSensorChanged(SensorEvent event) {
+		count++;
+		if(count != interval) return;
+		count = 0;
 		// センサーイベント
 		switch (event.sensor.getType()) {
 		case Sensor.TYPE_MAGNETIC_FIELD:
@@ -159,4 +164,6 @@ public class OrientationListener implements SensorEventListener {
 			}*/
 		}
 	}
+	
+	
 }
