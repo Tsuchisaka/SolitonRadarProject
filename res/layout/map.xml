@@ -44,7 +44,7 @@
                 android:textColor="#00ff00" />
 
             <ImageButton
-                android:id="@+id/button1"
+                android:id="@+id/captured"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#00000000"

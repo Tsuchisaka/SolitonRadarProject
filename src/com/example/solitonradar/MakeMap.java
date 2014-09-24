@@ -5,15 +5,21 @@ import java.util.TimerTask;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import android.support.v4.app.FragmentActivity;
 import android.location.Location;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -33,6 +39,8 @@ public class MakeMap  extends FragmentActivity{
 	private OrientationListener mOrientationListener;
 	private Bitmap sightImageGreen, sightImageRed, sightImageYellow, sightImageSquare;//mapで表示する視界範囲の画像を用意しておく
 	private long repeatInterval = 3000;//繰り返しの間隔（単位：msec）
+	private int mSoundId;
+	private SoundPool mSoundPool;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,14 +55,14 @@ public class MakeMap  extends FragmentActivity{
 		sightImageRed = BitmapFactory.decodeResource(resources, R.drawable.sightred);
 		sightImageYellow = BitmapFactory.decodeResource(resources, R.drawable.sightyellow);
 		sightImageSquare = BitmapFactory.decodeResource(resources, R.drawable.sightsquare);
-		
+
 		//一定時間ごと（今は500msec）に処理を行う．したい処理はTask.javaの中のrunに書いてください
 		Timer timer = new Timer();
 		TimerTask timerTask = new Task(this, this);
 		timer.scheduleAtFixedRate(timerTask, 0, repeatInterval);
-		
+
 		//pp.setMyPosition(0, 0.01, 0.30);//現在位置を取得してきてそれを入力してあげてサーバーに送る
-		
+
 		//地図作成する
 		setContentView(R.layout.map);
 		setUpMapIfNeeded();
@@ -62,6 +70,16 @@ public class MakeMap  extends FragmentActivity{
 		//役割取得・・・runawayはtrue，hunterはfalse
 		Intent intent = getIntent();
 		Boolean role = intent.getBooleanExtra("Role",false);
+
+		ImageButton captured = (ImageButton) findViewById(R.id.captured);
+		intent.putExtra("Role",false);
+		captured.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MakeMap.this,WinningOrLosing.class );
+				startActivity(intent);
+			}
+		});
 
 		/*
         ImageView imageView = new ImageView(this);
@@ -138,7 +156,7 @@ public class MakeMap  extends FragmentActivity{
 		OverlayHazard2 ms4 = new OverlayHazard2();
 		GroundOverlay overlay4 = mMap.addGroundOverlay(ms4.CreateArea2(315,latLng, sightImageSquare)); 
 		overlay4.setTransparency(0.4f);
-		*/
+		 */
 		if(bc.allBotData.size() == 0){
 			//ためし
 			MakeIcon miMP = new MakeIcon();
@@ -165,7 +183,7 @@ public class MakeMap  extends FragmentActivity{
 		p.setIsSnake(false);
 		pp.seeSnakesForm(bc.allBotData.get(1), bc.allBotData.get(5));
 		//テストセットここまで
-		*/
+		 */
 
 		int indexSnake = 0;
 		for(int i=1; i<bc.allBotData.size();i++){
@@ -213,8 +231,8 @@ public class MakeMap  extends FragmentActivity{
 
 	}
 
-public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べる）
-	        LatLng latLng = new LatLng(35.049497, 135.780738);
+	public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べる）
+		LatLng latLng = new LatLng(35.049497, 135.780738);
 
 		UiSettings settings = mMap.getUiSettings();
 		/*スクロール操作禁止*/
@@ -239,12 +257,12 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 			OverlayRadar or = new OverlayRadar();
 			GroundOverlay overlayradar = mMap.addGroundOverlay(or.CreateRadar());
 			overlayradar.setTransparency(0.55f);
-			
+
 			// 円描写
 			OverlayCircle oc = new OverlayCircle();
 			GroundOverlay overlayradar2 = mMap.addGroundOverlay(oc.CreateCircle(latLng));
 			overlayradar2.setTransparency(0.01f);
-			
+
 		}
 		/*
 		//スネークを発見する判定のテストセット
@@ -256,7 +274,7 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 		p.setIsSnake(false);
 		pp.seeSnakesForm(bc.allBotData.get(1), bc.allBotData.get(5));
 		//テストセットここまで
-	*/
+		 */
 		int indexSnake = 0;
 		for(int i=1; i<bc.allBotData.size();i++){
 			PlayerData pd = bc.allBotData.get(i);
@@ -283,10 +301,16 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 				if(pp.seeSnakesForm(bc.allBotData.get(indexSnake), pd)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageRed));
 					overlay1.setTransparency(0.5f);
+					// 再生
+					mSoundPool.play(mSoundId, 1.0F, 1.0F, 0, 0, 1.0F);
+					((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(500);
 				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, false)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
 					overlay1.setTransparency(0.5f);
-					
+					// 再生
+					mSoundPool.play(mSoundId, 1.0F, 1.0F, 0, 0, 1.0F);
+					((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(500);
+
 					//警戒区域 ：角度はその人から見てスネークがいる方角を代入する
 					OverlayHazard1 A = new OverlayHazard1();
 					GroundOverlay overlay5 = mMap.addGroundOverlay(A.CreateArea1(315,latLng, sightImageSquare)); 
@@ -309,12 +333,12 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 		OverlayRadar or = new OverlayRadar();
 		GroundOverlay overlayradar = mMap.addGroundOverlay(or.CreateRadar());
 		overlayradar.setTransparency(0.55f);
-		*/
+		 */
 		/*
 		//追加 ポリゴンの描写用
 		PolygonFlash pf = new PolygonFlash();
 		mMap.addPolygon(pf.Polygon(latLng)); // 描画
-		*/
+		 */
 	}
 
 
@@ -339,7 +363,7 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 					mCurrentLocation = location;
 					LatLng LL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
 
-                                        /*地図上にボットとポリゴン再描写*/
+					/*地図上にボットとポリゴン再描写*/
 					ViweMap(LL);
 
 					MakeIcon miMP = new MakeIcon();
@@ -362,12 +386,17 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 	protected void onResume() {
 		super.onResume();
 		getCurrentLocation();
+		// 予め音声データを読み込む
+		mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+		mSoundId = mSoundPool.load(getApplicationContext(), R.raw.notice, 0);
 	}
 
 	@Override
 	protected void onPause() {
 		mOrientationListener.pause();
 		super.onPause();
+		// リリース
+		mSoundPool.release();
 	}
 
 }

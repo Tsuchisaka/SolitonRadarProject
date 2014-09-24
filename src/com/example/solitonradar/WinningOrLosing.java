@@ -14,6 +14,7 @@ public class WinningOrLosing extends Activity {
 		//役割取得・・・runawayはtrue，hunterはfalse
 		Intent intent = getIntent();
 		Boolean role = intent.getBooleanExtra("Role",false);
+	
 		if(role == true){
 			setContentView(R.layout.agent_win);
 			ImageButton back1 = (ImageButton) findViewById(R.id.back1);
