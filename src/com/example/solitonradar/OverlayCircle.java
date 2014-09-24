@@ -22,7 +22,7 @@ public class OverlayCircle {
 			dir = (int)(Math.toDegrees(Math.acos(distance)) + 0.5);//四捨五入
 			dir = 360 - dir;
 		}
-		double r = 0.0003;//半径
+		double r = 0.0002;//半径
 		LatLng latlng = new LatLng(genome.latitude + r * Math.cos(Math.toRadians(dir)),genome.longitude + r * Math.sin(Math.toRadians(dir)));
 		// マップに貼り付ける BitmapDescriptor を生成
 		BitmapDescriptor descriptor = BitmapDescriptorFactory.fromResource(R.drawable.circle);

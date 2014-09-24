@@ -1471,13 +1471,14 @@ containing a value of this type.
         public static final int radiooff=0x7f020080;
         public static final int radioon=0x7f020081;
         public static final int red1=0x7f020082;
-        public static final int sightgreen=0x7f020083;
-        public static final int sightred=0x7f020084;
-        public static final int sightsquare=0x7f020085;
-        public static final int sightyellow=0x7f020086;
-        public static final int walg=0x7f020087;
-        public static final int wgla=0x7f020088;
-        public static final int worldmap=0x7f020089;
+        public static final int sightblue=0x7f020083;
+        public static final int sightgreen=0x7f020084;
+        public static final int sightred=0x7f020085;
+        public static final int sightsquare=0x7f020086;
+        public static final int sightyellow=0x7f020087;
+        public static final int walg=0x7f020088;
+        public static final int wgla=0x7f020089;
+        public static final int worldmap=0x7f02008a;
     }
     public static final class id {
         public static final int action_bar=0x7f09002e;
