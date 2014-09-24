@@ -52,3 +52,4 @@ bin/jarlist.cache
 project.properties
 *.class
 bin/classes.dex
+*.class
