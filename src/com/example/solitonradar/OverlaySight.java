@@ -31,7 +31,7 @@ public class OverlaySight {
 			y=(float)yy;
 			double d=(a+b)*20;
 			D=(float)d;
-			
+
 			options.anchor(0, y); 
 			options.position(latlng, D, D); 
 
@@ -88,5 +88,29 @@ public class OverlaySight {
 		return(options);
 	}
 
+	public GroundOverlayOptions CreateHazard(LatLng snake, LatLng genome){
+		BitmapDescriptor descriptor = null;
+		GroundOverlayOptions options = new GroundOverlayOptions(); 
+		descriptor = BitmapDescriptorFactory.fromResource(R.drawable.circle);
 
+		double snakerange;
+		int dir;
+		snakerange = Math.sqrt(
+				(snake.latitude - genome.latitude) * (snake.latitude - genome.latitude)
+				+(snake.longitude - genome.longitude) * (snake.longitude - genome.longitude)
+				);
+		double distance = (snake.latitude - genome.latitude) / snakerange;
+		if(snake.longitude >= genome.longitude){
+			dir = (int)(Math.toDegrees(Math.acos(distance)) + 0.5);//ŽlŽÌŒÜ“ü
+		}else{
+			dir = (int)(Math.toDegrees(Math.acos(distance)) + 0.5);//ŽlŽÌŒÜ“ü
+			dir = 360 - dir;
+		}
+		double R = 20;//”¼Œa
+		//double lon = genome.longitude + moverange * Math.sin(Math.toRadians(dir));
+		//double lat = genome.latitude + moverange * Math.cos(Math.toRadians(dir));
+
+		options.image(descriptor);
+		return options;
+	}
 }

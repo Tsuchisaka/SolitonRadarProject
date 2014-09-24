@@ -62,24 +62,6 @@ public class MakeMap  extends FragmentActivity{
 		//役割取得・・・runawayはtrue，hunterはfalse
 		Intent intent = getIntent();
 		Boolean role = intent.getBooleanExtra("Role",false);
-
-		/*
-        ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.net);
-        setContentView(imageView);
-		 */
-
-		/*String line = "test" + pp.allPlayersData.size();
-		Log.i(this.getClass().getName(), "Reading allPlayersData...");
-		Log.i(this.getClass().getName(), "allPlayersData.size() == " + pp.allPlayersData.size());
-		for(int i=0; i<pp.allPlayersData.size(); i++){
-			PlayerData pd = pp.allPlayersData.get(i);
-			line += pd.getMacAddress() + "\n";
-		}
-		TextView _helloWorldWord = new TextView(this);
-		_helloWorldWord.setText(line); 
-		setContentView(_helloWorldWord);
-		 */
 	}
 
 	@Override
@@ -155,7 +137,7 @@ public class MakeMap  extends FragmentActivity{
 			overlayradar.setTransparency(0.1f);
 		}
 
-		/*
+		
 		//スネークを発見する判定のテストセット
 		PlayerData p = bc.allBotData.get(5);
 		p.setCoordinate(45, p.getLongitude(), p.getLatitude());
@@ -165,7 +147,7 @@ public class MakeMap  extends FragmentActivity{
 		p.setIsSnake(false);
 		pp.seeSnakesForm(bc.allBotData.get(1), bc.allBotData.get(5));
 		//テストセットここまで
-		*/
+		
 
 		int indexSnake = 0;
 		for(int i=1; i<bc.allBotData.size();i++){
@@ -184,7 +166,7 @@ public class MakeMap  extends FragmentActivity{
 			if(i==indexSnake){
 				mMap.addMarker(icon.CreateIcon(2,ll));
 			}else if(i == 5){
-				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake + ", " + pp.testDis));
+				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake));
 			}else{
 				mMap.addMarker(icon.CreateIcon(1,ll));
 			}
@@ -193,9 +175,17 @@ public class MakeMap  extends FragmentActivity{
 				if(pp.seeSnakesForm(bc.allBotData.get(indexSnake), pd)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageRed));
 					overlay1.setTransparency(0.5f);
-				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, false)){
+				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, true)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
 					overlay1.setTransparency(0.5f);
+					
+					//警戒区域 ：角度はその人から見てスネークがいる方角を代入する
+					OverlayHazard1 A = new OverlayHazard1();
+					GroundOverlay overlay5 = mMap.addGroundOverlay(A.CreateArea1(270,latLng, sightImageSquare)); 
+					overlay5.setTransparency(0.4f);
+					OverlayHazard2 B = new OverlayHazard2();
+					GroundOverlay overlay6 = mMap.addGroundOverlay(B.CreateArea2(270,latLng, sightImageSquare)); 
+					overlay6.setTransparency(0.4f);
 				}else{
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageGreen));
 					overlay1.setTransparency(0.5f);
@@ -268,7 +258,7 @@ public void ViweMap(LatLng latlng) {//地図を表示させる関数（中心位置や縮尺を選べ
 			if(i==indexSnake){
 				mMap.addMarker(icon.CreateIcon(2,ll));
 			}else if(i == 5){
-				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake + ", " + pd.getDirection() + ", " + pp.testDis));
+				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake + ", " + pd.getDirection()));
 			}else{
 				mMap.addMarker(icon.CreateIcon(1,ll));
 			}

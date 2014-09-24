@@ -37,16 +37,16 @@ public class BotController extends PlayersPosition{
 				double range = 0.0003;
 				if(i % 4 == 0){
 					longitude += range * i;
-					latitude += range * (rnd.nextInt(3) -1);
+					//latitude += range * (rnd.nextInt(3) -1);
 				}else if(i%4==1){
 					longitude -= range * i;
-					latitude += range * (rnd.nextInt(3) -1);
+					//latitude += range * (rnd.nextInt(3) -1);
 				}else if(i%4==2){
 					latitude += range * i;
-					longitude += range * (rnd.nextInt(3) -1);
+					//longitude += range * (rnd.nextInt(3) -1);
 				}else{
 					latitude -= range * i;
-					longitude += range * (rnd.nextInt(3) -1);
+					//longitude += range * (rnd.nextInt(3) -1);
 				}
 				pd.setCoordinate(angle, longitude, latitude);
 			}
@@ -65,7 +65,7 @@ public class BotController extends PlayersPosition{
 
 	//botを操作する
 	public void BotMove(){
-		double moverange = 0.00003;
+		double moverange = 0.00001;
 		int dir = 0;
 		double lon = 0;//経度
 		double lat = 0;//緯度
@@ -92,20 +92,22 @@ public class BotController extends PlayersPosition{
 			}else{
 				//出ていない場合の処理
 				//正面左右90度ずつの角度の範囲に進む確率を他の2倍に設定してある
-				int ran = rnd.nextInt(540);
+				int ran = rnd.nextInt(300);
+				int ran2 = rnd.nextInt(2);
 				//プレイヤの正面に対して相対的な進行方向を決める
-				if(ran <= 180){
-					dir = ran/2;
-				}else if(ran >= 360){
-					dir = (ran + 180)/2;
+				if(ran <= 150){
+					dir = ran/15;
+				}else if(ran >= 310){
+					dir = (int)((double)ran/2 + 0.5) -65;
 				}else{
-					dir -= 90;
+					dir = ran - 310 + 90;
 				}
+				if(ran2 == 1)dir = 360 - dir;
 				//絶対的な進行方向に変換する
 				dir = (pdg.getDirection() + dir) % 360;
 				//移動後の位置を更新する
 				lon = pdg.getLongitude() + moverange * Math.sin(Math.toRadians(dir));
-				lat = pdg.getLatitude() - moverange * Math.cos(Math.toRadians(dir));
+				lat = pdg.getLatitude() + moverange * Math.cos(Math.toRadians(dir));
 				pdg.setCoordinate(dir, lon, lat);
 			}
 		}
