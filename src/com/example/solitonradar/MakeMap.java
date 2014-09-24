@@ -5,15 +5,21 @@ import java.util.TimerTask;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import android.support.v4.app.FragmentActivity;
 import android.location.Location;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -36,6 +42,8 @@ public class MakeMap  extends FragmentActivity{
 	private int mode = 1;
 	//mode:0 自分の位置情報をサーバで共有するゲームの通常モード
 	//mode:1 サーバを介さず、自分の位置情報も取得しないbotモード
+	private int mSoundId;
+	private SoundPool mSoundPool;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,6 +73,16 @@ public class MakeMap  extends FragmentActivity{
 		//役割取得・・・runawayはtrue，hunterはfalse
 		Intent intent = getIntent();
 		Boolean role = intent.getBooleanExtra("Role",false);
+
+		ImageButton captured = (ImageButton) findViewById(R.id.captured);
+		intent.putExtra("Role",false);
+		captured.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MakeMap.this,WinningOrLosing.class );
+				startActivity(intent);
+			}
+		});
 	}
 
 	@Override
@@ -140,7 +158,7 @@ public class MakeMap  extends FragmentActivity{
 			overlayradar.setTransparency(0.1f);
 		}
 
-
+		/*
 		//スネークを発見する判定のテストセット
 		PlayerData p = bc.allBotData.get(5);
 		p.setCoordinate(270, p.getLongitude(), p.getLatitude());
@@ -150,7 +168,7 @@ public class MakeMap  extends FragmentActivity{
 		p.setIsSnake(false);
 		pp.seeSnakesForm(bc.allBotData.get(1), bc.allBotData.get(5));
 		//テストセットここまで
-
+		 */
 
 		int indexSnake = 0;
 		for(int i=1; i<bc.allBotData.size();i++){
@@ -266,7 +284,7 @@ public class MakeMap  extends FragmentActivity{
 			if(i==indexSnake){
 				mMap.addMarker(icon.CreateIcon(2,ll));
 			}else if(i == 5){
-				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake + ", " + pd.getDirection()));
+				mMap.addMarker(icon.CreateIcon(3,ll, "" + pp.angleToSnake));
 			}else{
 				mMap.addMarker(icon.CreateIcon(1,ll));
 			}
@@ -275,9 +293,15 @@ public class MakeMap  extends FragmentActivity{
 				if(pp.seeSnakesForm(bc.allBotData.get(indexSnake), pd)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageRed));
 					overlay1.setTransparency(0.5f);
+					// 再生
+					mSoundPool.play(mSoundId, 1.0F, 1.0F, 0, 0, 1.0F);
+					((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(500);
 				}else if(pp.hearSnakesFootsteps(bc.allBotData.get(indexSnake), pd, false)){
 					GroundOverlay overlay1 = mMap.addGroundOverlay(ms1.CreateSight(pd.getDirection(),ll, sightImageYellow));
 					overlay1.setTransparency(0.5f);
+					// 再生
+					mSoundPool.play(mSoundId, 1.0F, 1.0F, 0, 0, 1.0F);
+					((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(500);
 
 					//警戒区域 ：角度はその人から見てスネークがいる方角を代入する
 					OverlayCircle oc = new OverlayCircle();
@@ -357,12 +381,17 @@ public class MakeMap  extends FragmentActivity{
 	protected void onResume() {
 		super.onResume();
 		getCurrentLocation();
+		// 予め音声データを読み込む
+		mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+		mSoundId = mSoundPool.load(getApplicationContext(), R.raw.notice, 0);
 	}
 
 	@Override
 	protected void onPause() {
 		mOrientationListener.pause();
 		super.onPause();
+		// リリース
+		mSoundPool.release();
 	}
 
 }
