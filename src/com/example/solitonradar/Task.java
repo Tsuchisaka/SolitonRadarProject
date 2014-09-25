@@ -39,6 +39,8 @@ public class Task extends TimerTask{
 					mm.bc.BotMoveForSet1();
 				}else if(mm.mode == 3 && mm.SceneStart == true){
 					mm.bc.BotMoveForSet2();
+				}else if(mm.mode == 4){
+					mm.bc.BotMoveForSet3();
 				}
 				LatLng latLng = new LatLng(35.049497, 135.780738);
 				Log.d("now running! :) ","run 2!");

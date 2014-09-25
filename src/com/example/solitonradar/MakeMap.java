@@ -46,11 +46,12 @@ public class MakeMap  extends FragmentActivity{
 	public OrientationListener mOrientationListener;
 	private Bitmap sightImageGreen, sightImageRed, sightImageYellow, sightImageBlue, sightImageSquare;//mapで表示する視界範囲の画像を用意しておく
 	private long repeatInterval = 3000;//繰り返しの間隔（単位：msec）
-	public int mode = 0;
+	public int mode = 4;
 	//mode:0 自分の位置情報をサーバで共有するゲームの通常モード
 	//mode:1 サーバを介さず、自分の位置情報も取得しないbotモード
 	//mode:2 デモ撮影用モード1
 	//mode:3 デモ撮影用モード2
+	//mode:4 発表用デモモード
 	private int mSoundId;
 	private SoundPool mSoundPool;
 	public boolean IamSnake = true;//
@@ -64,6 +65,10 @@ public class MakeMap  extends FragmentActivity{
 		if(mode == 1) bc = new BotController(5,latLng);
 		else if(mode == 2)bc = new BotController(1);
 		else if(mode == 3)bc = new BotController(2);
+		else if(mode == 4){
+			bc = new BotController(3);
+			SceneStart = true;
+		}
 		Resources resources = getResources();
 		//bc = new BotController(5,latLng);
 		//makeBotDataBaseForTest();
@@ -89,7 +94,7 @@ public class MakeMap  extends FragmentActivity{
 		captured.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mode == 0 || mode == 1){
+				if(mode == 0 || mode == 1 || mode == 4){
 					if(mode == 0){
 						timerTask.enable = false;
 						pp.deleteDataBase();
@@ -110,18 +115,23 @@ public class MakeMap  extends FragmentActivity{
 			query.findInBackground(new FindCallback<NCMBObject>() {
 				@Override
 				public void done(List<NCMBObject> result, NCMBException e){
+					Log.d("findSnake", "IamSnake="+IamSnake);
 					for(int i=0; i<result.size();i++){
 						NCMBObject obj = result.get(i);
+						Log.d("findSnake", obj.getString("MacAddress") + " is Snake = " + obj.getBoolean("SNAKE"));
 						if(obj.getString("MacAddress") == "MASTER"){
 							continue;
 						}
 						if(obj.getBoolean("SNAKE") == true){
+							Log.d("findSnake", obj.getString("MacAddress") + "is Snake");
+							Log.d("findSnake", "Sorry I am not Snake :(");
 							IamSnake = false;
 							break;
 						}
 					}
 				}
 			});
+			pp.mydata.setIsSnake(IamSnake);
 		}
 
 		//一定時間ごと（今は500msec）に処理を行う．したい処理はTask.javaの中のrunに書いてください
@@ -193,9 +203,11 @@ public class MakeMap  extends FragmentActivity{
 			for(int i=1; i<pp.allPlayersData.size();i++){
 				PlayerData pd = pp.allPlayersData.get(i);
 				if(pd.getIsSnake() == true){
+					Log.d("LookingViewMap",pd.getMacAddress() + " is Snake(" + i + ")");
 					indexSnake = i;
 				}
 				if(pd.getMacAddress() == "MASTER"){
+					Log.d("LookingViewMap",pd.getMacAddress() + " is MASTER(" + i + ")");
 					indexMaster = i;
 				}
 			}
@@ -203,12 +215,14 @@ public class MakeMap  extends FragmentActivity{
 
 			TextView timer = (TextView) findViewById(id.tap_text);
 			int time = pp.allPlayersData.get(indexMaster).getTime();
+			Log.d("LookingViewMap", "Get Time:" + time);
 			timer.setText(time + " sec left");
 			time -= (int)(repeatInterval / 1000);
+			Log.d("LookingViewMap", "Set Time:" + time);
 			pp.allPlayersData.get(indexMaster).setTime(time);
 			
 			if(time < 0){
-				if(mode == 0){
+				if(mode == 0 || mode == 4){
 					timerTask.enable = false;
 					pp.deleteDataBase();
 				}
@@ -222,14 +236,21 @@ public class MakeMap  extends FragmentActivity{
 			for(int i=1; i<pp.allPlayersData.size();i++){
 				PlayerData pd = pp.allPlayersData.get(i);
 				Log.d("now viewMap :) ","Mac:" + pd.getMacAddress());
+				Log.d("LookingViewMap", pd.getMacAddress() + " IsSnake=" + pd.getIsSnake() + " setting Icon(" + i + ")");
+				Log.d("LookingViewMap", "MyData Mac:" + pp.mydata.getMacAddress());
 				LatLng ll = new LatLng(pd.getLatitude(),pd.getLongitude());
 				MakeIcon icon = new MakeIcon();
 				if(i==indexSnake){
-					if(IamSnake == true) mMap.addMarker(icon.CreateIcon(2,ll));
+					if(IamSnake == true) {
+						mMap.addMarker(icon.CreateIcon(2,ll));
+						Log.d("LookingViewMap", "Made Snake Icon");
+					}
 				}else if(pp.mydata.getMacAddress() == pd.getMacAddress()){
 					mMap.addMarker(icon.CreateIcon(3,ll));
+					Log.d("LookingViewMap", "Made Your Icon");
 				}else{
 					mMap.addMarker(icon.CreateIcon(1,ll));
+					Log.d("LookingViewMap", "Made Genome Icon");
 				}
 				Log.d("SetIcon","Icon:" + pd.getMacAddress());
 				Log.d("SetIcon","Locate:" + pd.getDirection() + ", " + pd.getLatitude() + ", " + pd.getLongitude());
@@ -267,7 +288,7 @@ public class MakeMap  extends FragmentActivity{
 				}
 			}
 		}
-		else if(mode == 1 || mode == 2 || mode == 3){
+		else if(mode == 1 || mode == 2 || mode == 3 || mode == 4){
 			/*
 			//スネークを発見する判定のテストセット
 			PlayerData p = bc.allBotData.get(5);

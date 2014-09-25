@@ -115,6 +115,33 @@ public class BotController extends PlayersPosition{
 				pd.setTime(300);
 				allBotData.add(pd);
 			}
+		}else if(setNum == 3){
+			LatLng baseLocation = new LatLng(35.048911, 135.781539);
+			numberOfPlayers = 2;
+			for(int i=0; i<=numberOfPlayers;i++){
+				PlayerData pd = new PlayerData();
+				if(i==0){
+					pd.setMacAddress("MASTER");
+					pd.setIsSnake(false);
+					pd.setCoordinate(0, baseLocation.longitude, baseLocation.latitude);
+				}else if(i==numberOfPlayers){
+					pd.setMacAddress("Snake");
+					pd.setIsSnake(true);
+					angle = 0;
+					pd.setCoordinate(angle, baseLocation.longitude, baseLocation.latitude);
+					LatestSnakeLocation = new LatLng(baseLocation.latitude,baseLocation.longitude);
+				}else{
+					pd.setMacAddress("Genome Soldier" + i);
+					if(i == 1)MyName = pd.getMacAddress();
+					pd.setIsSnake(false);
+					double longitude = 135.781534;
+					double latitude = 35.048846;
+					angle = 180;
+					pd.setCoordinate(angle, longitude, latitude);
+				}
+				pd.setTime(600);
+				allBotData.add(pd);
+			}
 		}
 	}
 
@@ -277,6 +304,39 @@ public class BotController extends PlayersPosition{
 			isSnakeRunning = false;
 			snk.setCoordinate(350, 135.781390, 35.048618);
 			gen.setCoordinate(330, 135.781448, 35.048539);
+		}
+		sceneNum++;
+	}
+	
+	public void BotMoveForSet3(){
+		double lon = 0;
+		double lat = 0;
+		int dir = 0;
+		double SpeedWalk = 0.00002;
+		double SpeedRun = 0.00006;
+		double SpeedStay = 0.0;
+		double moverange = SpeedWalk;
+		PlayerData gen = allBotData.get(1);
+		PlayerData snk = allBotData.get(2);
+		if(sceneNum == 0)snk.setTime(600);
+		if(sceneNum < 2){
+			isSnakeRunning = false;
+			gen.setCoordinate(110, gen.getLongitude(), gen.getLatitude());
+		}
+		else if(sceneNum < 3){
+			gen.setCoordinate(30, gen.getLongitude(), gen.getLatitude());
+		}
+		else if(sceneNum < 4){
+			gen.setCoordinate(330, gen.getLongitude(), gen.getLatitude());
+		}
+		else if(sceneNum < 6){
+			gen.setCoordinate(0, gen.getLongitude(), gen.getLatitude());
+		}
+		else if(sceneNum < 7){
+			gen.setCoordinate(180, gen.getLongitude(), gen.getLatitude());
+		}
+		else{
+			sceneNum--;
 		}
 		sceneNum++;
 	}
